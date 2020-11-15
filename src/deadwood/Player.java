@@ -9,6 +9,7 @@ public class Player {
     protected int rehearsalTokens;
     protected int rank;
     protected boolean onRole = false; //false by default
+    protected String location;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){

@@ -41,8 +41,6 @@ public class XMLParser{
 
 
 
-            //get the name of the card, budget, and image
-            //instead of printing create card object?
             cardName = card.getAttributes().getNamedItem("name").getNodeValue();
             cardImg = card.getAttributes().getNamedItem("img").getNodeValue();
             cardBudget = card.getAttributes().getNamedItem("budget").getNodeValue();
@@ -90,6 +88,7 @@ public class XMLParser{
 
                         }
                     }
+                    tempRole.starring = true;
                     roles.add(tempRole);
                 }
             }
@@ -100,18 +99,109 @@ public class XMLParser{
     }
 
     //reads the board.xml file
-    public void readBoardData(Document doc){
+    public ArrayList<Set> readBoardData(Document doc){
+        ArrayList<Set> allSets = new ArrayList<Set>();
         Element root = doc.getDocumentElement();
-        NodeList sets = root.getElementsByTagName("set");
 
+        String trailerName = "Trailer";
+        ArrayList<String> trailerNeighbors = new ArrayList<>();
+        ArrayList<Role> trailerRoles = new ArrayList<Role>();
+        ArrayList<Take> trailerTakes = new ArrayList<Take>();
+        String trailerX = "";
+        String trailerY = "";
+        String trailerW = "";
+        String trailerH = "";
+
+        NodeList trailers = root.getElementsByTagName("trailer");
+        Node trailer = trailers.item(0);
+        NodeList trailerChildren = trailer.getChildNodes();
+        for(int i = 0; i < trailerChildren.getLength(); i++){
+            Node sub = trailerChildren.item(i);
+            //gets neighbor data
+            if("neighbors".equals(sub.getNodeName())){
+                Element el = (Element) trailerChildren.item(i);
+                NodeList neighbors = el.getElementsByTagName("neighbor");
+                for(int x = 0; x < neighbors.getLength(); x++){
+                    Node neighbor = neighbors.item(x);
+                    String neighborName = neighbor.getAttributes().getNamedItem("name").getNodeValue();
+
+                    trailerNeighbors.add(neighborName);
+                }
+            }
+            else if("area".equals(sub.getNodeName())){
+                String sX = sub.getAttributes().getNamedItem("x").getNodeValue();
+                String sY = sub.getAttributes().getNamedItem("y").getNodeValue();
+                String sW = sub.getAttributes().getNamedItem("w").getNodeValue();
+                String sH = sub.getAttributes().getNamedItem("h").getNodeValue();
+
+                trailerX = sX;
+                trailerY = sY;
+                trailerW = sW;
+                trailerH = sH;
+            }
+        }
+        Set trailerSet = new Set(trailerName, trailerX, trailerY, trailerW, trailerH, 0, trailerNeighbors, trailerRoles, trailerTakes);
+        allSets.add(trailerSet);
+
+        String officeName = "Office";
+        ArrayList<String> officeNeighbors = new ArrayList<>();
+        ArrayList<Role> officeRoles = new ArrayList<Role>();
+        ArrayList<Take> officeTakes = new ArrayList<Take>();
+        String officeX = "";
+        String officeY = "";
+        String officeW = "";
+        String officeH = "";
+
+        NodeList offices = root.getElementsByTagName("office");
+        Node office = offices.item(0);
+        NodeList officeChildren = office.getChildNodes();
+        for(int i = 0; i < officeChildren.getLength(); i++){
+            Node sub = officeChildren.item(i);
+            //gets neighbor data
+            if("neighbors".equals(sub.getNodeName())){
+                Element el = (Element) officeChildren.item(i);
+                NodeList neighbors = el.getElementsByTagName("neighbor");
+                for(int x = 0; x < neighbors.getLength(); x++){
+                    Node neighbor = neighbors.item(x);
+                    String neighborName = neighbor.getAttributes().getNamedItem("name").getNodeValue();
+
+                    officeNeighbors.add(neighborName);
+                }
+            }
+            else if("area".equals(sub.getNodeName())){
+                String sX = sub.getAttributes().getNamedItem("x").getNodeValue();
+                String sY = sub.getAttributes().getNamedItem("y").getNodeValue();
+                String sW = sub.getAttributes().getNamedItem("w").getNodeValue();
+                String sH = sub.getAttributes().getNamedItem("h").getNodeValue();
+
+                officeX = sX;
+                officeY = sY;
+                officeW = sW;
+                officeH = sH;
+            }
+        }
+        Set officeSet = new Set(officeName, officeX, officeY, officeW, officeH, 0, officeNeighbors, officeRoles, officeTakes);
+        allSets.add(officeSet);
+
+
+        NodeList sets = root.getElementsByTagName("set");
         //for each 'set' on the board
-        for (int i = 0; i < sets.getLength(); i++){
+        for (int i = 0; i < sets.getLength(); i++){ 
+            ArrayList<String> neighborNames = new ArrayList<>();
+            ArrayList<Role> roles = new ArrayList<Role>();
+            ArrayList<Take> takesData = new ArrayList<Take>();
+            String setName;
+            String setX = "";
+            String setY = "";
+            String setW = "";
+            String setH = "";
+            int totalTakes = 0;
+
             Node set = sets.item(i);
 
             //get the sets name and print it
             //instead of printing, create Set object??
-            String setName = set.getAttributes().getNamedItem("name").getNodeValue();
-            System.out.println("Set: " + setName);
+            setName = set.getAttributes().getNamedItem("name").getNodeValue();
 
             //get the rest of the elements in the current set
             NodeList setChildren = set.getChildNodes();
@@ -126,28 +216,37 @@ public class XMLParser{
                         Node neighbor = neighbors.item(x);
                         String neighborName = neighbor.getAttributes().getNamedItem("name").getNodeValue();
 
-                        System.out.println("    Neighbor: " + neighborName);
+                        neighborNames.add(neighborName);
+
                     }
                 }
                 //gets set area data
                 else if("area".equals(sub.getNodeName())){
                     String sX = sub.getAttributes().getNamedItem("x").getNodeValue();
                     String sY = sub.getAttributes().getNamedItem("y").getNodeValue();
-                    String sH = sub.getAttributes().getNamedItem("w").getNodeValue();
-                    String sW = sub.getAttributes().getNamedItem("h").getNodeValue();
-                    System.out.printf("    Set area; x: %s, y: %s, h: %s, w: %s%n", sX, sY, sH, sW);
+                    String sW = sub.getAttributes().getNamedItem("w").getNodeValue();
+                    String sH = sub.getAttributes().getNamedItem("h").getNodeValue();
+
+                    setX = sX;
+                    setY = sY;
+                    setW = sW;
+                    setH = sH;
+
                 }
                 //gets takes/shotcounter data
                 else if("takes".equals(sub.getNodeName())){
                     Element el = (Element) setChildren.item(j);
                     NodeList takes = el.getElementsByTagName("take");
-                    int totalTakes = takes.getLength();
-                    System.out.println("    Set Takes: "+ totalTakes);
+                    totalTakes = takes.getLength();
 
                     //gets take data for later (gui stuff)
                     for(int x = 0; x < takes.getLength(); x++){
+                        Take tempTake = new Take();
+
                         Node take = takes.item(x);
                         String takeNumber = take.getAttributes().getNamedItem("number").getNodeValue();
+
+                        tempTake.takeNum = takeNumber;
 
                         Element takeEl = (Element) takes.item(x);
                         NodeList takeData = takeEl.getElementsByTagName("area");
@@ -157,20 +256,30 @@ public class XMLParser{
                             String tY = takeArea.getAttributes().getNamedItem("y").getNodeValue();
                             String tH = takeArea.getAttributes().getNamedItem("h").getNodeValue();
                             String tW = takeArea.getAttributes().getNamedItem("w").getNodeValue();
-                            System.out.printf("        Take area %s; x: %s, y: %s, h: %s, w: %s%n", takeNumber, tX, tY, tH, tW);
+
+                            tempTake.x = tX;
+                            tempTake.y = tY;
+                            tempTake.h = tH;
+                            tempTake.w = tW;
                         }
+                        takesData.add(tempTake);
                     }
                 }
                 //gets set parts data
                 else if("parts".equals(sub.getNodeName())){
+                    
                     Element el = (Element) setChildren.item(j);
                     NodeList parts = el.getElementsByTagName("part");
 
                     for(int y = 0; y < parts.getLength(); y++){
+                        Role tempRole = new Role();
                         Node part = parts.item(y);
                         String partName = part.getAttributes().getNamedItem("name").getNodeValue();
                         String difficulty = part.getAttributes().getNamedItem("level").getNodeValue();
-                        System.out.printf("    Part: %s, Difficulty: %s%n", partName, difficulty);
+
+                        tempRole.roleName = partName;
+                        tempRole.roleDifficulty = Integer.parseInt(difficulty);
+
 
                         NodeList partData = part.getChildNodes();
                         for(int z = 0; z < partData.getLength(); z++){
@@ -178,18 +287,31 @@ public class XMLParser{
                             if("area".equals(partDataNode.getNodeName())){
                                 String pX = partDataNode.getAttributes().getNamedItem("x").getNodeValue();
                                 String pY = partDataNode.getAttributes().getNamedItem("y").getNodeValue();
-                                String pH = partDataNode.getAttributes().getNamedItem("w").getNodeValue();
-                                String pW = partDataNode.getAttributes().getNamedItem("h").getNodeValue();
-                                System.out.printf("        Part area; x: %s, y: %s, h: %s, w: %s%n", pX, pY, pH, pW);
+                                String pW = partDataNode.getAttributes().getNamedItem("w").getNodeValue();
+                                String pH = partDataNode.getAttributes().getNamedItem("h").getNodeValue();
+
+                                tempRole.x = pX;
+                                tempRole.y = pY;
+                                tempRole.w = pW;
+                                tempRole.h = pH;
+
                             }
                             if("line".equals(partDataNode.getNodeName())){
                                 String line = partDataNode.getTextContent();
-                                System.out.printf("        Line: %s%n", line);
+
+                                tempRole.roleDescription = line;
+
                             }
                         }
+                        
+                    tempRole.starring = false;
+                    roles.add(tempRole);
                     }
                 }
             }
+            Set newSet = new Set(setName, setX, setY, setW, setH, totalTakes, neighborNames, roles, takesData);
+            allSets.add(newSet);
         }
+        return allSets;
     }
 }

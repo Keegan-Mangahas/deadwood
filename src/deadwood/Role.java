@@ -32,6 +32,6 @@ public class Role {
     }
 
     public void printRoleData(){
-        System.out.printf("    Role name: %s, Difficulty: %d%n        Area(x, y, w, h): %s %s %s %s%n        Line: %s%n", roleName, roleDifficulty, x, y, w, h, roleDescription);
+        System.out.printf("    Role name: %s, Difficulty: %d, Starring: %b%n        Area(x, y, w, h): %s %s %s %s%n        Line: %s%n", roleName, roleDifficulty, starring, x, y, w, h, roleDescription);
     }
 }

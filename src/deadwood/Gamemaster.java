@@ -17,25 +17,39 @@ public class Gamemaster {
     */
     public static void main(String[] args){
         Gamemaster game = new Gamemaster(); //create the game!
+        Board board = new Board(); //creates the board!
         DeadwoodPrinter printer = new DeadwoodPrinter(); //create the printer
         Scanner input = new Scanner(System.in); //global scanner for user inputed
+        XMLParser parseXML = new XMLParser(); //xmlParser
 
         /*
         setup board
         make a while loop to cycle through players turns until 1 scene card is left
         */
         
-        XMLParser parseXML = new XMLParser();
-
-        /*
         //read board data
         Document boardDoc = null;
         try{
-            boardDoc = test.getDocFromFile("src/xml/board.xml");
-            test.readBoardData(boardDoc);
+            boardDoc = parseXML.getDocFromFile("src/xml/board.xml");
+            board.sets = parseXML.readBoardData(boardDoc);
         }
         catch (Exception e){
             System.out.println("Error = "+e);
+        }
+
+        /*
+        //This reads data out from each set and its roles;
+        for(int i = 0; i < tempSets.size(); i++){
+            Set testSet = tempSets.get(i);
+            testSet.printSceneInfo();
+            for(int j = 0; j < testSet.takesData.size(); j++){
+                Take testTake = testSet.takesData.get(j);
+                testTake.printTakeData();
+            }
+            for(int j = 0; j < testSet.roles.size(); j++){
+                Role testRole = testSet.roles.get(j);
+                testRole.printRoleData();
+            }
         }
         */
 
@@ -51,7 +65,7 @@ public class Gamemaster {
         Collections.shuffle(game.sceneCards); //shuffles the scene cards
 
         /*
-        This reads data out from each scene card and its roles
+        //This reads data out from each scene card and its roles
         for(int i = 0; i < game.sceneCards.size(); i++){
             Scene sceneTest = game.sceneCards.get(i);
             sceneTest.printSceneInfo();
@@ -62,7 +76,7 @@ public class Gamemaster {
         }
         */
         
-
+        
         //actual game!
         //ask for amount of players (maybe more error tests?)
         game.numberOfPlayers = 0;
