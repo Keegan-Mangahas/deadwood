@@ -27,7 +27,7 @@ public class Gamemaster {
         make a while loop to cycle through players turns until 1 scene card is left
         */
         
-        //read board data
+        //read set data and put it into the board
         Document boardDoc = null;
         try{
             boardDoc = parseXML.getDocFromFile("src/xml/board.xml");
@@ -36,22 +36,6 @@ public class Gamemaster {
         catch (Exception e){
             System.out.println("Error = "+e);
         }
-
-        /*
-        //This reads data out from each set and its roles;
-        for(int i = 0; i < tempSets.size(); i++){
-            Set testSet = tempSets.get(i);
-            testSet.printSceneInfo();
-            for(int j = 0; j < testSet.takesData.size(); j++){
-                Take testTake = testSet.takesData.get(j);
-                testTake.printTakeData();
-            }
-            for(int j = 0; j < testSet.roles.size(); j++){
-                Role testRole = testSet.roles.get(j);
-                testRole.printRoleData();
-            }
-        }
-        */
 
         //read and store scene card data
         Document cardDoc = null;
@@ -63,19 +47,6 @@ public class Gamemaster {
             System.out.println("Error"+e);
         }
         Collections.shuffle(game.sceneCards); //shuffles the scene cards
-
-        /*
-        //This reads data out from each scene card and its roles
-        for(int i = 0; i < game.sceneCards.size(); i++){
-            Scene sceneTest = game.sceneCards.get(i);
-            sceneTest.printSceneInfo();
-            for(int j = 0; j < sceneTest.roles.size(); j++){
-                Role roleTest = sceneTest.roles.get(j);
-                roleTest.printRoleData();
-            }
-        }
-        */
-        
         
         //actual game!
         //ask for amount of players (maybe more error tests?)
@@ -87,23 +58,39 @@ public class Gamemaster {
                 printer.invalidPlayers();
             }
         }
-        
+ 
         game.createPlayers();
         input.nextLine(); //clear scanner
-        //while board has more than one scene card
+        //while game is running
         while(true){
-            Player current = game.currentPlayer;
-            printer.whoseTurn(game.currentPlayer);
-            String turnResult = current.playersTurn(input, printer);
-            if(turnResult.equals("next")){
-                int playerId = current.playerNumber;
-                if(playerId == game.numberOfPlayers){
-                    game.currentPlayer = game.players.get(0);
+            //first time through, this just sets up board by giving sets scene cards
+            //every time after, it is giving sets new scene cards
+            //starts at 2 because trailer set is [0] and office set is [1]
+            for(int i = 2; i < board.sets.size(); i++){
+                board.sets.get(i).currentScene = game.sceneCards.remove(0);
+            }
+
+            //test to see sets and their scene card info
+            for(int i = 2; i < board.sets.size(); i++){
+                System.out.printf("Set: %s | Scene Card: %s%n", board.sets.get(i).setName, board.sets.get(i).currentScene.sceneName);
+            }
+
+            //while board has more than one scene card
+            while(true){
+                Player current = game.currentPlayer;
+                printer.whoseTurn(game.currentPlayer);
+                String turnResult = current.playersTurn(input, printer);
+                if(turnResult.equals("next")){
+                    int playerId = current.playerNumber;
+                    if(playerId == game.numberOfPlayers){
+                        game.currentPlayer = game.players.get(0);
                 }
-                else{
-                    game.currentPlayer = game.players.get(playerId);
+                    else{
+                        game.currentPlayer = game.players.get(playerId);
+                    }
                 }
             }
+            
         }
     }
 
