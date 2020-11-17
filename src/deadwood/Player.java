@@ -47,12 +47,12 @@ public class Player {
                     printer.working();
                     String input = playerInput.nextLine();
                     if(input.equals("act")){
-                        System.out.println("ACT ROLE");
+                        System.out.println();
                         act(playerInput, printer);
                         continueTurn = false;
                         break;
                     } else if(input.equals("rehearse")){
-                        System.out.println("REHEARSE ROLE");
+                        System.out.println();
                         rehearse(playerInput, printer);
                         continueTurn = false;
                         break;
@@ -70,16 +70,16 @@ public class Player {
                     printer.notMoveNotUpgrade();
                     String input = playerInput.nextLine();
                     if(input.equals("move")){
-                        System.out.println("MOVE PLAYER");
+                        System.out.println();
                         moved = move(playerInput, printer);
                         movedTo(printer);
                         break;
                     } else if(input.equals("upgrade")){
-                        System.out.println("UPGRADE RANK");
+                        System.out.println();
                         upgraded = upgradeRank(playerInput, printer);
                         break;
                     } else if(input.equals("work")){
-                        System.out.println("START WORK ON ROLE");
+                        System.out.println();
                         onRole = work(playerInput, printer);
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
@@ -102,12 +102,12 @@ public class Player {
                     printer.moveNotUpgrade();
                     String input = playerInput.nextLine();
                     if(input.equals("upgrade")){
-                        System.out.println("UPGRADE RANK");
+                        System.out.println();
                         upgraded = upgradeRank(playerInput, printer);
                         continueTurn = !upgraded;
                         break;
                     } else if(input.equals("work")){
-                        System.out.println("START WORK ON ROLE");
+                        System.out.println();
                         onRole = work(playerInput, printer);
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
@@ -131,12 +131,12 @@ public class Player {
                     printer.notMoveUpgrade();
                     String input = playerInput.nextLine();
                     if(input.equals("move")){
-                        System.out.println("MOVE PLAYER");
+                        System.out.println();
                         moved = move(playerInput, printer);
                         movedTo(printer);
                         break;
                     } else if(input.equals("work")){
-                        System.out.println("START WORK ON ROLE");
+                        System.out.println();
                         onRole = work(playerInput, printer);
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
@@ -159,7 +159,7 @@ public class Player {
                     printer.moveUpgrade();
                     String input = playerInput.nextLine();
                     if(input.equals("work")){
-                        System.out.println("START WORK ON ROLE");
+                        System.out.println();
                         onRole = work(playerInput, printer);
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
@@ -228,17 +228,32 @@ public class Player {
 
         Role findRole = new Role();
         int roleIndex = 0;
-        for (Role getRole : findSet.roles) {
-            if(role.roleName.equals(getRole.roleName)){
-                findRole = getRole;
+        if(role.starring == false){
+            for (Role getRole : findSet.roles) {
+                if(role.roleName.equals(getRole.roleName)){
+                    findRole = getRole;
+                    break;
+                }
+                roleIndex++;
             }
-            roleIndex++;
+            findSet.roles.set(roleIndex, findRole);
+            sets.set(setIndex, findSet);
+            return sets;
+        } else {
+            for (Role getRole : findSet.currentScene.roles) {
+                if(role.roleName.equals(getRole.roleName)){
+                    findRole = getRole;
+                    break;
+                }
+                roleIndex++;
+            }
+            findSet.currentScene.roles.set(roleIndex, findRole);
+            sets.set(setIndex, findSet);
+            return sets;
         }
+        
 
-        findRole = role;
-        findSet.roles.add(roleIndex, findRole);
-        sets.add(setIndex, findSet);
-        return sets;
+        
     }
 
     private Boolean checkRole(int roleNum, Set set, DeadwoodPrinter printer) {
@@ -313,6 +328,7 @@ public class Player {
         for (Set getSet : tempBoard.sets) {
             if(location.equals(getSet.setName)){
                 findSet = getSet;
+                break;
             }
             setIndex++;
         }
@@ -333,8 +349,8 @@ public class Player {
             if(findSet.totalTakes == 0){
                 tempBoard.sceneCardsLeft--;
                 findSet.sceneWrapped = true;
-                tempBoard.sets.add(setIndex, findSet);
-                //TODO: wrap the scene and pay the players on card accordingly
+                tempBoard.sets.set(setIndex, findSet);
+                tempBoard.wrapThisSet = findSet;
 
             }
         } else {
@@ -377,7 +393,6 @@ public class Player {
         }
     }
     
-    //TODO: Check if scene is wrapped
     private void movedTo(DeadwoodPrinter printer) {
         Set currentSet = new Set();
         int setIndex = 0;
@@ -387,7 +402,7 @@ public class Player {
                 if(currentSet.sceneDiscovered == false){
                     currentSet.sceneDiscovered = true;
                     printer.discoveredScene(currentSet);
-                    tempBoard.sets.add(setIndex, currentSet);
+                    tempBoard.sets.set(setIndex, currentSet);
                 } else if(currentSet.sceneWrapped == true){
                     printer.thisSetIsWrapped();
                 }

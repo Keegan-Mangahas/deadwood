@@ -141,4 +141,10 @@ public class DeadwoodPrinter extends Gamemaster{
     protected void cannotWorkWrapped(){
         System.out.println("You cannot work here. This scene is already wrapped");
     }
+    protected void wrappingScene(String scene, String set){
+        System.out.printf("Wrapping up scene '%s' on set '%s'%n", scene, set);
+    }
+    protected void wrapBonusDollar(int player, int dol){
+        System.out.printf("Player %d got %d bonus dollar(s)!%n", player, dol);
+    }
 }

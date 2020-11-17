@@ -6,6 +6,7 @@ public class Board extends Gamemaster{
     protected int sceneCardsLeft;
     protected static int currentDay; //what day the game is on
     protected ArrayList<Set> sets = new ArrayList<Set>();
+    protected Set wrapThisSet;
 
     /**
      * Default Constructor
