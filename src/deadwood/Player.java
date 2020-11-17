@@ -10,6 +10,8 @@ public class Player {
     protected int rank;
     protected boolean onRole = false; //false by default
     protected String location;
+    protected Role role;
+    protected Board tempBoard;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){
@@ -26,17 +28,15 @@ public class Player {
         return null;
     }
 
-    public String playersTurn(Scanner playerInput, DeadwoodPrinter printer){
+    public Board playersTurn(Scanner playerInput, DeadwoodPrinter printer, Board board){
         /*
-        moveTo()
-        upgradeRank()
         rehearse()
-        chooseRole()
         act()
         
         make it so player can continue turn if applicable
         ex. player moves, they can upgrade OR take role then work
         */
+        tempBoard = board;
         boolean continueTurn = true;
         boolean moved = false;
         boolean upgraded = false;
@@ -48,14 +48,18 @@ public class Player {
                     String input = playerInput.nextLine();
                     if(input.equals("act")){
                         System.out.println("ACT ROLE");
+                        act(playerInput, printer);
                         continueTurn = false;
                         break;
                     } else if(input.equals("rehearse")){
                         System.out.println("REHEARSE ROLE");
+                        rehearse(playerInput, printer);
                         continueTurn = false;
                         break;
                     } else if(input.equals("info")){
                         System.out.println(printPlayerData());
+                    } else if(input.equals("set")){
+                        getSetRoleData(printer);
                     } else{
                         System.out.println("Invalid input, try again");
                     }
@@ -67,7 +71,8 @@ public class Player {
                     String input = playerInput.nextLine();
                     if(input.equals("move")){
                         System.out.println("MOVE PLAYER");
-                        moved = true; //MOVE THIS INTO MOVE METHOD INCASE PLAYER CHANGES MIND
+                        moved = move(playerInput, printer);
+                        movedTo(printer);
                         break;
                     } else if(input.equals("upgrade")){
                         System.out.println("UPGRADE RANK");
@@ -75,13 +80,18 @@ public class Player {
                         break;
                     } else if(input.equals("work")){
                         System.out.println("START WORK ON ROLE");
-                        onRole = true;
+                        onRole = work(playerInput, printer);
+                        if(onRole == true){
+                            tempBoard.sets = updateSetRole(tempBoard.sets);
+                        }
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
                         break;
                     } else if(input.equals("info")){
                         System.out.println(printPlayerData());
+                    } else if(input.equals("set")){
+                        getSetRoleData(printer);
                     } else{
                         System.out.println("Invalid input, try again");
                     }
@@ -98,7 +108,10 @@ public class Player {
                         break;
                     } else if(input.equals("work")){
                         System.out.println("START WORK ON ROLE");
-                        onRole = true;
+                        onRole = work(playerInput, printer);
+                        if(onRole == true){
+                            tempBoard.sets = updateSetRole(tempBoard.sets);
+                        }
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
@@ -106,6 +119,8 @@ public class Player {
                     } else if(input.equals("info")){
                         System.out.println(printPlayerData());
                         break;
+                    } else if(input.equals("set")){
+                        getSetRoleData(printer);
                     } else{
                         System.out.println("Invalid input, try again");
                     }
@@ -116,18 +131,24 @@ public class Player {
                     printer.notMoveUpgrade();
                     String input = playerInput.nextLine();
                     if(input.equals("move")){
-                      System.out.println("MOVE PLAYER");
-                        moved = true; //MOVE THIS INTO MOVE METHOD INCASE PLAYER CHANGES MIND
+                        System.out.println("MOVE PLAYER");
+                        moved = move(playerInput, printer);
+                        movedTo(printer);
                         break;
                     } else if(input.equals("work")){
                         System.out.println("START WORK ON ROLE");
-                        onRole = true;
+                        onRole = work(playerInput, printer);
+                        if(onRole == true){
+                            tempBoard.sets = updateSetRole(tempBoard.sets);
+                        }
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
                         break;
                     } else if(input.equals("info")){
                         System.out.println(printPlayerData());
+                    } else if(input.equals("set")){
+                        getSetRoleData(printer);
                     } else{
                         System.out.println("Invalid input, try again");
                     }
@@ -139,33 +160,267 @@ public class Player {
                     String input = playerInput.nextLine();
                     if(input.equals("work")){
                         System.out.println("START WORK ON ROLE");
-                        onRole = true;
+                        onRole = work(playerInput, printer);
+                        if(onRole == true){
+                            tempBoard.sets = updateSetRole(tempBoard.sets);
+                        }
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
                         break;
                     } else if(input.equals("info")){
                         System.out.println(printPlayerData());
+                    } else if(input.equals("set")){
+                        getSetRoleData(printer);
                     } else{
                         System.out.println("Invalid input, try again");
                     }
                 }
             }
         }
-        return "next";
+        return tempBoard;
     }
 
-    private void moveTo(Set destRoom) {
+    private Boolean work(Scanner playerInput, DeadwoodPrinter printer){
+        if("trailer".equals(location) || "office".equals(location)){
+            printer.cannotWork();
+            return false;
+        }
+        Set currentSet = new Set();
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                currentSet = getSet;
+            }
+        }
+        if(currentSet.sceneWrapped == true){
+            printer.cannotWorkWrapped();
+            return false;
+        }
+        int totalRoles;
+        while(true){
+            totalRoles = printer.listRoles(currentSet);
+            String input = playerInput.nextLine();
+            if("back".equals(input)){
+                return false;
+            } else if(Integer.parseInt(input) < 1 || Integer.parseInt(input) > totalRoles){
+                printer.invalid();
+                continue;
+            } else{
+                Boolean validRole = checkRole(Integer.parseInt(input), currentSet, printer);
+                if(!validRole){
+                    continue;
+                }
+                return true;
+            }
+        }
+    }
+
+    private ArrayList<Set> updateSetRole(ArrayList<Set> sets){
+        Set findSet = new Set();
+        int setIndex = 0;
+        for (Set getSet : sets) {
+            if(location.equals(getSet.setName)){
+                findSet = getSet;
+                break;
+            }
+            setIndex++;
+        }
+
+        Role findRole = new Role();
+        int roleIndex = 0;
+        for (Role getRole : findSet.roles) {
+            if(role.roleName.equals(getRole.roleName)){
+                findRole = getRole;
+            }
+            roleIndex++;
+        }
+
+        findRole = role;
+        findSet.roles.add(roleIndex, findRole);
+        sets.add(setIndex, findSet);
+        return sets;
+    }
+
+    private Boolean checkRole(int roleNum, Set set, DeadwoodPrinter printer) {
+        int i = 0;
+        roleNum = roleNum - 1;
+        for (Role role : set.roles) {
+            if(roleNum == i){
+                if(role.roleTaken == true){
+                    printer.roleTaken();
+                    return false;
+                } else if(role.roleDifficulty > rank){
+                    System.out.println(role.roleDifficulty);
+                    System.out.println(rank);
+                    printer.roleTooHard();
+                    return false;
+                } else if(role.roleDifficulty <= rank && role.roleTaken == false){
+                    onRole = true;
+                    role.roleTaken = true;
+                    this.role = role;
+                    printer.working(role.roleName);
+                    return true;
+                }
+                
+            }
+            i++;
+        }
+        for (Role role : set.currentScene.roles) {
+            if(roleNum == i){
+                if(role.roleTaken == true){
+                    printer.roleTaken();
+                    return false;
+                } else if(role.roleDifficulty > rank){
+                    System.out.println(role.roleDifficulty);
+                    System.out.println(rank);
+                    printer.roleTooHard();
+                    return false;
+                } else if(role.roleDifficulty <= rank && role.roleTaken == false){
+                    onRole = true;
+                    role.roleTaken = true;
+                    this.role = role;
+                    printer.working(role.roleName);
+                    return true;
+                }
+            }
+            i++;
+        }
+        return true; //remove this
+    }
+
+    private void rehearse(Scanner playerInput, DeadwoodPrinter printer) {
+        Set findSet = new Set();
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                findSet = getSet;
+            }
+        }
+        if(rehearsalTokens + 1 == findSet.currentScene.sceneBudget ){
+            printer.maxRehearseToken();
+        } else {
+            rehearsalTokens++;
+            printer.successRehearse(rehearsalTokens);
+        }
+    }
+
+    private void act(Scanner playerInput, DeadwoodPrinter printer) {
+        Random die = new Random();
+        printer.notifyActing();
+        int dieRoll = 1 + die.nextInt(6 - 1 + 1);
+
+        int setIndex = 0;
+        Set findSet = new Set();
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                findSet = getSet;
+            }
+            setIndex++;
+        }
+
+        int rollTotal = dieRoll + rehearsalTokens;
+        if(rollTotal >= findSet.currentScene.sceneBudget){
+            printer.actingSuccess();
+            findSet.totalTakes--;
+            if(role.starring == true){
+                credits += 2;
+                printer.gotMoney(2, 0);
+            } else if (role.starring == false){
+                credits += 1;
+                dollars += 1;
+                printer.gotMoney(1, 1);
+            }
+
+            if(findSet.totalTakes == 0){
+                tempBoard.sceneCardsLeft--;
+                findSet.sceneWrapped = true;
+                tempBoard.sets.add(setIndex, findSet);
+                //TODO: wrap the scene and pay the players on card accordingly
+
+            }
+        } else {
+            printer.actingFail();
+            if(role.starring == true){
+                printer.gotMoney(0, 0);
+            } else if (role.starring == false){
+                dollars += 1;
+                printer.gotMoney(0, 1);
+            }
+        }
+        
         /*
-        this will need to check for valid rooms user can move into
-        will also probably trigger stuff for undiscovered scenes
+        this will need to check if scene is wrapped after acting
+        since Board class seems to contain board/scene info,
+        wrapScene method is in there
         */
+    }
+
+    private Boolean move(Scanner playerInput, DeadwoodPrinter printer){
+        ArrayList<String> neighbors = new ArrayList<>();
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                neighbors = getSet.neighborNames;
+            }
+        }
+        while(true){
+            printer.listNeighbors(neighbors);
+            String input = playerInput.nextLine();
+            if(neighbors.contains(input)){
+                location = input;
+                printer.currentLocation(location);
+                return true;
+            } else if(input.equals("back")) {
+                return false;
+            } else{
+                printer.invalid();
+                continue;
+            }
+        }
+    }
+    
+    //TODO: Check if scene is wrapped
+    private void movedTo(DeadwoodPrinter printer) {
+        Set currentSet = new Set();
+        int setIndex = 0;
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                currentSet = getSet;  
+                if(currentSet.sceneDiscovered == false){
+                    currentSet.sceneDiscovered = true;
+                    printer.discoveredScene(currentSet);
+                    tempBoard.sets.add(setIndex, currentSet);
+                } else if(currentSet.sceneWrapped == true){
+                    printer.thisSetIsWrapped();
+                }
+                break;
+            }
+            setIndex++;
+        }
+    }
+
+    private void getSetRoleData(DeadwoodPrinter printer){
+        if("trailer".equals(location)){
+            printer.printTrailerData();
+            return;
+        } else if ("office".equals(location)){
+            printer.printOfficeData();
+            return;
+        }
+        Set currentSet = new Set();
+        for (Set getSet : tempBoard.sets) {
+            if(location.equals(getSet.setName)){
+                currentSet = getSet;  
+                currentSet.sceneDiscovered = true;
+                printer.printSetRoleData(currentSet);
+                
+                break;
+            }
+        }
     }
 
     private boolean upgradeRank(Scanner playerInput, DeadwoodPrinter printer) {
         //THIS NEEDS TO CHECK IF PLAYER IS IN UPGRADE ROOM STILL
         //REPLACE IF STATEMENT
-        if(true){
+        if("office".equals(location)){
             while(true){
                 printer.ranksList();
                 printer.askRank();
@@ -209,8 +464,10 @@ public class Player {
                         continue;
                 }
             }
+        } else {
+            printer.notInOffice();
+            return false;
         }
-        return false; //base case???
     }
 
     private boolean upgradeP2(Scanner playerInput, DeadwoodPrinter printer, String input, int dolPrice, int credPrice){
@@ -243,26 +500,8 @@ public class Player {
                     continue;
             }
         }
-        //remove this
     }
 
-    private void rehearse() {
-        //give player rehearse counter
-        //force to act if rehearse counters are max
-    }
-
-    private void act() {
-        /*
-        this will need to check if scene is wrapped after acting
-        since Board class seems to contain board/scene info,
-        wrapScene method is in there
-        */
-    }
-
-    private void chooseRole() {
-        //will need to make sure player can take role
-        //will also let player work on role if they take it
-    }
 
     public boolean isOnRole() {
         return onRole;
@@ -298,7 +537,7 @@ public class Player {
                 ", Dollars: "+dollars+
                 ", Rank: "+rank+
                 ", Rehearsal Tokens: "+rehearsalTokens+
-                ", Location: NOT IMPLEMENTED";
+                ", Location: "+location;
                 //print player location too
     }
 }

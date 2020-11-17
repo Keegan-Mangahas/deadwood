@@ -10,6 +10,7 @@ public class Role {
     protected String h;
     protected String roleDescription;
     protected boolean starring;
+    protected boolean roleTaken = false; //false by default
 
     public Role(){
 

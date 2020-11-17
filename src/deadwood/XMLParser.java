@@ -103,7 +103,7 @@ public class XMLParser{
         ArrayList<Set> allSets = new ArrayList<Set>();
         Element root = doc.getDocumentElement();
 
-        String trailerName = "Trailer";
+        String trailerName = "trailer";
         ArrayList<String> trailerNeighbors = new ArrayList<>();
         ArrayList<Role> trailerRoles = new ArrayList<Role>();
         ArrayList<Take> trailerTakes = new ArrayList<Take>();
@@ -141,9 +141,10 @@ public class XMLParser{
             }
         }
         Set trailerSet = new Set(trailerName, trailerX, trailerY, trailerW, trailerH, 0, trailerNeighbors, trailerRoles, trailerTakes);
+        trailerSet.sceneDiscovered = true;
         allSets.add(trailerSet);
 
-        String officeName = "Office";
+        String officeName = "office";
         ArrayList<String> officeNeighbors = new ArrayList<>();
         ArrayList<Role> officeRoles = new ArrayList<Role>();
         ArrayList<Take> officeTakes = new ArrayList<Take>();
@@ -182,7 +183,7 @@ public class XMLParser{
         }
         Set officeSet = new Set(officeName, officeX, officeY, officeW, officeH, 0, officeNeighbors, officeRoles, officeTakes);
         allSets.add(officeSet);
-
+        officeSet.sceneDiscovered = true;
 
         NodeList sets = root.getElementsByTagName("set");
         //for each 'set' on the board

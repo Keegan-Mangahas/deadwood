@@ -62,36 +62,39 @@ public class Gamemaster {
         game.createPlayers();
         input.nextLine(); //clear scanner
         //while game is running
-        while(true){
+        while(game.maxGameDays != 0){
             //first time through, this just sets up board by giving sets scene cards
             //every time after, it is giving sets new scene cards
             //starts at 2 because trailer set is [0] and office set is [1]
             for(int i = 2; i < board.sets.size(); i++){
                 board.sets.get(i).currentScene = game.sceneCards.remove(0);
+                board.sceneCardsLeft = 10;
             }
 
+            /*
             //test to see sets and their scene card info
             for(int i = 2; i < board.sets.size(); i++){
                 System.out.printf("Set: %s | Scene Card: %s%n", board.sets.get(i).setName, board.sets.get(i).currentScene.sceneName);
             }
+            */
 
             //while board has more than one scene card
-            while(true){
+            while(board.sceneCardsLeft != 1){
                 Player current = game.currentPlayer;
                 printer.whoseTurn(game.currentPlayer);
-                String turnResult = current.playersTurn(input, printer);
-                if(turnResult.equals("next")){
-                    int playerId = current.playerNumber;
-                    if(playerId == game.numberOfPlayers){
-                        game.currentPlayer = game.players.get(0);
-                }
-                    else{
-                        game.currentPlayer = game.players.get(playerId);
-                    }
+                board = current.playersTurn(input, printer, board); //update board with data from turn
+                
+                int playerId = current.playerNumber;
+                if(playerId == game.numberOfPlayers){
+                    game.currentPlayer = game.players.get(0);
+                } else{
+                    game.currentPlayer = game.players.get(playerId);
                 }
             }
-            
+            System.out.println("RESET BOARD");
+            game.maxGameDays--;
         }
+        System.out.println("END GAME");
     }
 
     private int calculateScore(Player player) {
@@ -141,6 +144,7 @@ public class Gamemaster {
         }
         for(int i = 1; i <= numberOfPlayers; i++){
             Player newPlayer = new Player(i, 100, startingCredits, startingRank);
+            newPlayer.location = "trailer";
             players.add(newPlayer);
         }
         for(int i = 0; i < numberOfPlayers; i++){

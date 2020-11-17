@@ -11,11 +11,18 @@ public class Set {
     protected String h;
     protected int totalTakes;
     protected Scene currentScene;
+
+    protected Boolean sceneDiscovered = false; //false by default
+    protected Boolean sceneWrapped = false; //false by default
+
     //protected Collection<Set> adjacentSets = new ArrayList<>();
     protected ArrayList<String> neighborNames = new ArrayList<String>();
     protected ArrayList<Role> roles = new ArrayList<Role>();
     protected ArrayList<Take> takesData = new ArrayList<Take>();
 
+    public Set(){
+        
+    }
 
     public Set(String name, String sX, String sY, String sW, String sH, int totalTakesNum, ArrayList neighbors, ArrayList setRoles, ArrayList takeList) {
         setName = name;
