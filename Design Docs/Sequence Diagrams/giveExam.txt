@@ -1,0 +1,20 @@
+@startuml
+title: Give an Exam
+actor Student
+actor Instructor
+actor TA
+entity Exam
+database Grades
+
+Instructor -> Student: notify_exam(date, time, topics)
+Instructor -> Exam: prepare_exam(topics)
+Instructor -> Exam: prepare_sample_sol(exam)
+Instructor -> Instructor: print(exam)
+Instructor -> Student: distribute(exam, sample_sols)
+Student -> Exam: take_exam()
+Student -> Instructor: submit_exam()
+Instructor -> Exam: grade_exam()
+TA -> Exam: grade_exam()
+Instructor -> Grades: record_grades()
+Grades -> Student: return(graded_exam)
+@enduml

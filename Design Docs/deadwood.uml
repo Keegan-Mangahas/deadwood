@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>deadwood</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">deadwood.Card</node>
+    <node x="0.0" y="357.0">deadwood.Role</node>
+    <node x="208.0" y="357.0">deadwood.Gamemaster</node>
+    <node x="553.0" y="204.0">deadwood.CastingOffice</node>
+    <node x="0.0" y="610.0">deadwood.Deck</node>
+    <node x="389.0" y="192.0">deadwood.PlayableRoom</node>
+    <node x="0.0" y="806.0">deadwood.Deadwood</node>
+    <node x="659.0" y="357.0">deadwood.Die</node>
+    <node x="343.0" y="0.0">deadwood.Room</node>
+    <node x="45.5" y="258.0">deadwood.SceneCard</node>
+    <node x="256.0" y="192.0">deadwood.Trailer</node>
+    <node x="519.0" y="610.0">deadwood.SceneController</node>
+    <node x="567.0" y="731.0">deadwood.XML</node>
+    <node x="197.0" y="731.0">deadwood.Player</node>
+    <node x="386.0" y="731.0">deadwood.Board</node>
+    <node x="209.0" y="610.0">deadwood.RankController</node>
+    <node x="0.0" y="731.0">deadwood.Printer</node>
+    <node x="513.0" y="357.0">deadwood.Rank</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="deadwood.Trailer" target="deadwood.Room">
+      <point x="0.0" y="-27.0" />
+      <point x="312.5" y="167.0" />
+      <point x="382.3333333333333" y="167.0" />
+      <point x="-78.66666666666669" y="71.0" />
+    </edge>
+    <edge source="deadwood.SceneCard" target="deadwood.Card">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+    <edge source="deadwood.CastingOffice" target="deadwood.Room">
+      <point x="0.0" y="-15.0" />
+      <point x="629.0" y="167.0" />
+      <point x="539.6666666666667" y="167.0" />
+      <point x="78.66666666666674" y="71.0" />
+    </edge>
+    <edge source="deadwood.PlayableRoom" target="deadwood.Room">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="269.0" y="245.0" />
+  <SelectedNodes>
+    <node>deadwood.SceneCard</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

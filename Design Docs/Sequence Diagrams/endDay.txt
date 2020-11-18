@@ -1,0 +1,18 @@
+@startuml
+title: End day
+
+participant Grandmaster
+participant Board
+actor Player
+
+Gamemaster -> Player: player.move(trailer) for each
+Gamemaster -> Board: board.clear()
+Gamemaster -> Board: board.deal_new_day()
+Gamemaster -> Board: board.replace_shot_counters()
+alt if board.day() == 0
+  Gamemaster -> Board: end_game()
+
+else else
+  Gamemaster -> Board: begin_day()
+end
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+title: Perform upgrade
+
+participant Gamemaster
+participant Board
+actor Player
+
+Gamemaster -> Player: player.loc() = "Casting Office"
+note left: potentially redundant
+note right: no alternate check since we only display valid options
+Player -> Gamemaster: rank_upgrade(player.cash, player.credits)
+Gamemaster -> Player: change_rank(player)
+Gamemaster -> Player: end_turn()
+@enduml
+

@@ -1,0 +1,20 @@
+@startuml
+title: Scoring
+
+actor Player
+participant Gamemaster
+participant Board
+
+Gamemaster -> Player: player.calculate_score()
+note right: score information in player object, self calling? not sure.
+alt if board.click(SELL SELL SELL):
+  Gamemaster -> Player: player.calculate_score_dollars()
+  note right: there's a better way to lay this out..
+end
+Gamemaster -> Gamemaster: announce_winner()
+Gamemaster -> Board: perform_winner_winner_chicken_dinner()
+@enduml
+
+
+  
+

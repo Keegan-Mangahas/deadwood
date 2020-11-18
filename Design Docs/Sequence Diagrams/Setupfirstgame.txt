@@ -1,0 +1,38 @@
+@startuml
+title: Setup first game
+actor Player
+participant Gamemaster
+participant Board
+
+Gamemaster -> Board: setup_board()
+Gamemaster -> Board: arrange_board()
+
+group random board configuration
+  Gamemaster -> Board: randomize_board()
+end
+
+Gamemaster -> Player: get_player_count()
+Gamemaster -> Board: set_total_cards(40)
+Gamemaster -> Player: handout_cash_money() 
+Gamemaster -> Board: init_player_pos()
+Gamemaster -> Board: randomize_deck()
+Gamemaster -> Board: deal_cards_to_set()
+Gamemaster -> Board: fill_sets_with_cards()
+Gamemaster -> Gamemaster: select_first_player()
+
+
+alt less than 4 players
+  Gamemaster -> Board: set_days(3)
+  Gamemaster -> Board: set_total_cards(30)
+
+else 5 players
+  Gamemaster -> Player: give_credits_all(2)
+
+else 6 players
+  Gamemaster -> Player: give_credits_all(4)
+
+else 7 < players < 8 
+  Gamemaster -> Board: set_rank_all(2)
+end
+
+@enduml

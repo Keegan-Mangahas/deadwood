@@ -1,0 +1,45 @@
+@startuml
+class Administrator {
+  checkRevenue(Vending Machine): int
+  setupVendingMachine(Name): void
+}
+
+class MaintenanceEmployee {
+  restockVendingMachine(Vending Machine): [] of currentStock
+  checkStock(Vending Machine)
+}
+
+
+class Customer {
+  cash: int
+  creditCardNum: float
+  getCash(): int
+  getCreditCardNum(): float
+}
+
+Customer .. VM
+Administrator -> VM 
+MaintenanceEmployee -> VM
+
+class VM {
+name: String
+#revenue: float
+#itemsSold: int
+stock: int[] of type Beverage
+getMachine(name): Vending Machine
+addBeverage(Beverage.name): void
+removeBeverage(Beverage.name): void
+checkStock(Beverage): int
+displayPrice(Beverage.price): void
+verifyPayment(Beverage.name, Customer.payment): Beverage
+dispense(Beverage): Beverage
+checkPaymentType(payment): 
+} <|-- class Beverage {
+name: String
+price: int
+getName(): String
+getPrice(): int
+setName(): void
+setPrice(): void
+}
+@enduml
