@@ -77,16 +77,23 @@ public class Gamemaster {
                 player.location = "trailer";
                 player.onRole = false;
                 player.role = null;
+                player.rehearsalTokens = 0;
             }
 
             //after resetting players, reset each set
             for (Set set : board.sets) {
                 set.sceneDiscovered = false;
                 set.sceneWrapped = false;
+                for (Role role: set.roles) {
+                    role.roleTaken = false;
+                }
+                set.takesLeft = set.totalTakes;
             }
 
+            board.wrapThisSet = null;
+
             //while board has more than one scene card
-            while(board.sceneCardsLeft != 1){
+            while(board.sceneCardsLeft != 9){
                 Player current = currentPlayer;
                 printer.whoseTurn(currentPlayer);
                 board = current.playersTurn(input, printer, board); //update board with data from turn
@@ -101,10 +108,12 @@ public class Gamemaster {
                     currentPlayer = players.get(playerId);
                 }
             }
-            System.out.println("RESET BOARD");
+            System.out.println("RESTTING BOARD AND PLAYERS");
             maxGameDays--;
         }
-        System.out.println("END GAME");
+        System.out.println("ENDING GAME");
+        endGame(printer);
+
     }
 
     private static void wrapSet(DeadwoodPrinter printer){
@@ -130,6 +139,7 @@ public class Gamemaster {
                         dieRollsIndex++;
                         player.role = null;
                         player.onRole = false;
+                        player.rehearsalTokens = 0;
                     }
                 }
                 if(dieRollsIndex == sceneBudget){
@@ -154,31 +164,43 @@ public class Gamemaster {
         }
     }
 
-    private int calculateScore(Player player) {
+    private static int calculateScore(Player player) {
         int score = 0;
-        score += player.getDollars();
-        score += player.getCredits();
-        score += (player.getRank() * 5);
+        score += player.dollars;
+        score += player.credits;
+        score += (player.rank * 5);
         return score;
     }
 
-    private void endGame() {
-        // TODO: implement endGame
+    private static void endGame(DeadwoodPrinter printer) {
+        displayScores(calculateScores(), printer);
     }
 
-    private Player calculateWinner() {
-        // TODO: implement calculateWinner
-        return null;
+    private static int[] calculateScores() {
+        int[] scores = new int[numberOfPlayers];
+        int i = 0;
+        for (Player player : players) {
+            int score = calculateScore(player);
+            scores[i] = score;
+            player.score = score;
+            score++;
+            i++;
+        }
+        Arrays.sort(scores);
+        return scores;
     }
 
-    private void displayWinner(Player winner) {
-        // TODO: implement displayWinner
-    }
-
-    private void setBoardLayout(){
-        // TODO: implement setBoardLayout()
-        //ask user if board should be default or randomized
-        //create board layout, default or random
+    private static void displayScores(int[] scores, DeadwoodPrinter printer) {
+        printer.finalScores();
+        int place = 1;
+        for(int i = scores.length - 1; i >= 0; i--){
+            for (Player player : players) {
+                if(player.score == scores[i]){
+                    printer.printScores(place, player.playerNumber, player.score);
+                    place++;
+                }
+            }
+        }
     }
 
     private static void createPlayers(){
@@ -202,6 +224,7 @@ public class Gamemaster {
         for(int i = 1; i <= numberOfPlayers; i++){
             Player newPlayer = new Player(i, 0, startingCredits, startingRank);
             newPlayer.location = "trailer";
+            newPlayer.score = 0;
             players.add(newPlayer);
         }
         for(int i = 0; i < numberOfPlayers; i++){

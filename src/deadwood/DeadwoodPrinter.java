@@ -147,4 +147,10 @@ public class DeadwoodPrinter extends Gamemaster{
     protected void wrapBonusDollar(int player, int dol){
         System.out.printf("Player %d got %d bonus dollar(s)!%n", player, dol);
     }
+    protected void finalScores(){
+        System.out.printf("%nThe final scores are:%n");
+    }
+    protected void printScores(int place, int player, int score){
+        System.out.printf("%d:  Player %d with %d points%n", place, player, score);
+    }
 }

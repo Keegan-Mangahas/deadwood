@@ -10,6 +10,7 @@ public class Set {
     protected String w;
     protected String h;
     protected int totalTakes;
+    protected int takesLeft;
     protected Scene currentScene;
 
     protected Boolean sceneDiscovered = false; //false by default
@@ -34,7 +35,7 @@ public class Set {
         neighborNames = neighbors;
         roles = setRoles;
         takesData = takeList;
-
+        takesLeft = totalTakes;
     }
 
 

@@ -12,6 +12,7 @@ public class Player {
     protected String location;
     protected Role role;
     protected Board tempBoard;
+    protected int score;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){
@@ -336,7 +337,7 @@ public class Player {
         int rollTotal = dieRoll + rehearsalTokens;
         if(rollTotal >= findSet.currentScene.sceneBudget){
             printer.actingSuccess();
-            findSet.totalTakes--;
+            findSet.takesLeft--;
             if(role.starring == true){
                 credits += 2;
                 printer.gotMoney(2, 0);
@@ -346,7 +347,7 @@ public class Player {
                 printer.gotMoney(1, 1);
             }
 
-            if(findSet.totalTakes == 0){
+            if(findSet.takesLeft == 0){
                 tempBoard.sceneCardsLeft--;
                 findSet.sceneWrapped = true;
                 tempBoard.sets.set(setIndex, findSet);
