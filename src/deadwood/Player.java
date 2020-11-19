@@ -85,6 +85,7 @@ public class Player {
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
                         }
+                        continueTurn = !onRole;
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
@@ -113,6 +114,7 @@ public class Player {
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
                         }
+                        continueTurn = !onRole;
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
@@ -142,6 +144,7 @@ public class Player {
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
                         }
+                        continueTurn = !onRole;
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
@@ -165,6 +168,7 @@ public class Player {
                         if(onRole == true){
                             tempBoard.sets = updateSetRole(tempBoard.sets);
                         }
+                        continueTurn = !onRole;
                         break;
                     } else if(input.equals("skip")){
                         continueTurn = false;
