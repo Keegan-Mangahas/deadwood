@@ -73,7 +73,9 @@ public class Player {
                     if(input.equals("move")){
                         System.out.println();
                         moved = move(playerInput, printer);
-                        movedTo(printer);
+                        if(moved == true){
+                            movedTo(printer);
+                        }
                         break;
                     } else if(input.equals("upgrade")){
                         System.out.println();
@@ -136,7 +138,9 @@ public class Player {
                     if(input.equals("move")){
                         System.out.println();
                         moved = move(playerInput, printer);
-                        movedTo(printer);
+                        if(moved == true){
+                            movedTo(printer);
+                        }
                         break;
                     } else if(input.equals("work")){
                         System.out.println();
