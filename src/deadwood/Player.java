@@ -13,6 +13,9 @@ public class Player {
     protected Role role;
     protected Board tempBoard;
     protected int score;
+    protected boolean continueTurn = true;
+    protected boolean moved = false;
+    protected boolean upgraded = false;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){
@@ -22,13 +25,13 @@ public class Player {
         rank = ran;
     }
 
-    private Set getCurrentRoom() {
-        //find where player currently is
-        //do we want to store this as its own variable?
-        //or is it easier for Room class to store players in room?
-        return null;
+    private void resetBeforeTurn(){
+        continueTurn = true;
+        moved = false;
+        upgraded = false;
     }
 
+    //add reset for next turn method
     public Board playersTurn(Scanner playerInput, DeadwoodPrinter printer, Board board){
         /*
         rehearse()
@@ -37,10 +40,9 @@ public class Player {
         make it so player can continue turn if applicable
         ex. player moves, they can upgrade OR take role then work
         */
+        resetBeforeTurn();
         tempBoard = board;
-        boolean continueTurn = true;
-        boolean moved = false;
-        boolean upgraded = false;
+        
         while(continueTurn){
             //if player is currently working
             if(onRole){
