@@ -16,6 +16,15 @@ public class GUI extends JFrame{
     //labels
     JLabel boardLabel;
     JLabel menuLabel;
+    JLabel numberOfDays = new JLabel();
+    JLabel sceneCardsLeft = new JLabel();
+
+    JLabel currentPlayer = new JLabel();
+    JLabel playerRank = new JLabel();
+    JLabel playerCredits = new JLabel();
+    JLabel playerDollars = new JLabel();
+    JLabel playerRehearseTokens = new JLabel();
+    JLabel playerLocation = new JLabel();
     //buttons
     JButton moveButton;
     JButton workButton;
@@ -63,6 +72,7 @@ public class GUI extends JFrame{
         menuLabel = new JLabel("MENU");
         menuLabel.setBounds(boardIcon.getIconWidth() + 40 , 0, 100, 20);
         boardPane.add(menuLabel, 2);
+        
 
         moveButton = new JButton("MOVE");
         moveButton.setBackground(Color.white);
@@ -100,9 +110,6 @@ public class GUI extends JFrame{
         boardPane.add(skipButton, new Integer(2));
         boardPane.add(upgradeButton, new Integer(2));
 
-        /////////////////////////////
-        /////PLAYERS/////////////////
-        /////////////////////////////
     }
 
     public void addAllTurnButtons(){
@@ -172,6 +179,8 @@ public class GUI extends JFrame{
     }
 
     public void runTurn(Player currentPlayer){
+        displayInfo(currentPlayer);
+
         System.out.println(currentPlayer.printPlayerData());
         if(currentPlayer.continueTurn == true){
             if(currentPlayer.onRole == true){
@@ -190,6 +199,40 @@ public class GUI extends JFrame{
                 addSelectedTurnButtons(4);
             }
         }
+    }
+
+    public void displayInfo(Player player){
+        numberOfDays.setText("Days left: " + player.tempBoard.maxGameDays);
+        numberOfDays.setBounds(1200 + 10, 500, 300, 20);
+        boardPane.add(numberOfDays, new Integer(2));
+
+        sceneCardsLeft.setText("Scenes left: " + player.tempBoard.sceneCardsLeft);
+        sceneCardsLeft.setBounds(1200 + 10, 520, 300, 20);
+        boardPane.add(sceneCardsLeft, new Integer(2));
+
+        currentPlayer.setText("Current player: Player " + player.playerNumber);
+        currentPlayer.setBounds(1200 + 10, 540, 300, 20);
+        boardPane.add(currentPlayer, new Integer(2));
+
+        playerRank.setText("Rank: " + player.rank);
+        playerRank.setBounds(1200 + 10, 560, 300, 20);
+        boardPane.add(playerRank, new Integer(2));
+
+        playerCredits.setText("Credits: " + player.credits);
+        playerCredits.setBounds(1200 + 10, 580, 300, 20);
+        boardPane.add(playerCredits, new Integer(2));
+
+        playerDollars.setText("Dollars: " + player.dollars);
+        playerDollars.setBounds(1200 + 10, 600, 300, 20);
+        boardPane.add(playerDollars, new Integer(2));
+
+        playerRehearseTokens.setText("Rehearse Tokens: " + player.rehearsalTokens);
+        playerRehearseTokens.setBounds(1200 + 10, 620, 300, 20);
+        boardPane.add(playerRehearseTokens, new Integer(2));
+
+        playerLocation.setText("Location: " + player.location);
+        playerLocation.setBounds(1200 + 10, 640, 300, 20);
+        boardPane.add(playerLocation, new Integer(2));
     }
 
     public void updatePlayerLocation(Player currentPlayer, ArrayList<Set> sets){
