@@ -18,7 +18,12 @@ public class GUI extends JFrame{
     JButton moveButton;
     JButton workButton;
     JButton upgradeButton;
+    JButton backButton;
+    JButton locationButton;
+
     JLabel playerLabel;
+
+    public Boolean moveClicked = false;
 
     public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
 
@@ -65,11 +70,18 @@ public class GUI extends JFrame{
         workButton.setBounds(boardIcon.getIconWidth() + 10, 60, 100, 20);
         workButton.addMouseListener(new boardMouseListener());
 
-        upgradeButton = new JButton("REHEARSE");
+        upgradeButton = new JButton("UPGRADE");
         upgradeButton.setBackground(Color.white);
         upgradeButton.setBounds(boardIcon.getIconWidth() + 10, 90, 100, 20);
         upgradeButton.addMouseListener(new boardMouseListener());
 
+        backButton = new JButton("BACK");
+        backButton.setBackground(Color.white);
+        backButton.setBounds(boardIcon.getIconWidth() + 10, 90, 100, 20);
+        backButton.addMouseListener(new boardMouseListener());
+        backButton.setVisible(false);
+
+        boardPane.add(backButton, new Integer(2));
         boardPane.add(moveButton, new Integer(2));
         boardPane.add(workButton, new Integer(2));
         boardPane.add(upgradeButton, new Integer(2));
@@ -95,11 +107,21 @@ public class GUI extends JFrame{
         // Code for the different button clicks
         public void mouseClicked(MouseEvent e) {
             if (e.getSource() == moveButton){
-
+                Boolean allowMove = Deadwood.checkTurnStatus("move");
+                if(allowMove){
+                    System.out.println("MOVE PLAYER");
+                    Deadwood.movePlayer();
+                }
             } else if (e.getSource() == workButton){
-
+                Boolean allowMove = Deadwood.checkTurnStatus("work");
+                if(allowMove){
+                    System.out.println("WORK PLAYER");
+                }
             } else if (e.getSource() == upgradeButton){
-                
+                Boolean allowMove = Deadwood.checkTurnStatus("upgrade");
+                if(allowMove){
+                    System.out.println("UPGRADE PLAYER");
+                }
             }     
         }
         public void mousePressed(MouseEvent e) {
@@ -112,6 +134,30 @@ public class GUI extends JFrame{
         }
     }
 
+    public void addMoveOptions(Gamemaster game){
+        removeTurnButtons();
+        int heightOffset = 0;
+        ArrayList<String> neighbors = new ArrayList<String>();
+        for (Set getSet : Gamemaster.board.sets) {
+            if(game.currentPlayer.location.equals(getSet.setName)){
+                neighbors = getSet.neighborNames;
+            }
+        }
+        for (String string : neighbors) {
+            locationButton = new JButton(string);
+            locationButton.setBackground(Color.white);
+            locationButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+            locationButton.addMouseListener(new boardMouseListener());
+            boardPane.add(locationButton, 2);
+            locationButton.setVisible(true);
+            heightOffset += 30;
+        }
+        backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+        backButton.setVisible(true);
+
+    }
+
+    //create the each player on the GUI and return players arraylist now that each player has a label
     public ArrayList<Player> createGuiPlayers(ArrayList<Player> players){
         int widthOffset = 0;
         int heightOffset = 0;
@@ -130,6 +176,7 @@ public class GUI extends JFrame{
             getPlayer.guiLabel = playerLabel;
         }
         return players;
+        
     }
 
     public static int askNumPlayers(GUI gui){
