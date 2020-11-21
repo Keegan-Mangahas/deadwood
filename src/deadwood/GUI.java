@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
+import java.util.*;
 
 public class GUI extends JFrame{
     //pane
@@ -13,20 +14,23 @@ public class GUI extends JFrame{
     //labels
     JLabel boardLabel;
     JLabel menuLabel;
-    JLabel playerOne;
-    JLabel playerTwo;
-    JLabel playerThree;
-    JLabel playerFour;
-    JLabel playerFive;
-    JLabel playerSix;
-    JLabel playerSeven;
-    JLabel playerEight;
     //buttons
     JButton moveButton;
     JButton workButton;
     JButton upgradeButton;
+    JLabel playerLabel;
 
-   
+    public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
+
+    public static String[][] playerImages = {
+        {"src/images/dice/b1.png", "src/images/dice/b2.png", "src/images/dice/b3.png", "src/images/dice/b4.png", "src/images/dice/b5.png", "src/images/dice/b6.png"},
+        {"src/images/dice/c1.png", "src/images/dice/c2.png", "src/images/dice/c3.png", "src/images/dice/c4.png", "src/images/dice/c5.png", "src/images/dice/c6.png"},
+        {"src/images/dice/g1.png", "src/images/dice/g2.png", "src/images/dice/g3.png", "src/images/dice/g4.png", "src/images/dice/g5.png", "src/images/dice/g6.png"},
+        {"src/images/dice/o1.png", "src/images/dice/o2.png", "src/images/dice/o3.png", "src/images/dice/o4.png", "src/images/dice/o5.png", "src/images/dice/o6.png"},
+        {"src/images/dice/p1.png", "src/images/dice/p2.png", "src/images/dice/p3.png", "src/images/dice/p4.png", "src/images/dice/p5.png", "src/images/dice/p6.png"},
+        {"src/images/dice/r1.png", "src/images/dice/r2.png", "src/images/dice/r3.png", "src/images/dice/r4.png", "src/images/dice/r5.png", "src/images/dice/r6.png"},
+        {"src/images/dice/v1.png", "src/images/dice/v2.png", "src/images/dice/v3.png", "src/images/dice/v4.png", "src/images/dice/v5.png", "src/images/dice/v6.png"},
+        {"src/images/dice/y1.png", "src/images/dice/y2.png", "src/images/dice/y3.png", "src/images/dice/y4.png", "src/images/dice/y5.png", "src/images/dice/y6.png"}};
 
     public GUI(){
         super("Deadwood");
@@ -39,7 +43,7 @@ public class GUI extends JFrame{
         boardLabel.setIcon(boardIcon);
         boardLabel.setBounds(0, 0, boardIcon.getIconWidth(), boardIcon.getIconHeight());
 
-        boardPane.add(boardLabel, 0);
+        boardPane.add(boardLabel, new Integer(0));
 
         setSize(boardIcon.getIconWidth()+200, boardIcon.getIconHeight());
 
@@ -66,15 +70,13 @@ public class GUI extends JFrame{
         upgradeButton.setBounds(boardIcon.getIconWidth() + 10, 90, 100, 20);
         upgradeButton.addMouseListener(new boardMouseListener());
 
-        boardPane.add(moveButton, 2);
-        boardPane.add(workButton, 2);
-        boardPane.add(upgradeButton, 2);
+        boardPane.add(moveButton, new Integer(2));
+        boardPane.add(workButton, new Integer(2));
+        boardPane.add(upgradeButton, new Integer(2));
 
         /////////////////////////////
         /////PLAYERS/////////////////
         /////////////////////////////
-        playerOne = new JLabel();
-        ImageIcon playerOneIcon = new ImageIcon("src/images/");
     }
 
     public void addTurnButtons(){
@@ -110,6 +112,7 @@ public class GUI extends JFrame{
         }
     }
 
+    //move all this into a deadwood.java file when finished
     public static void main(String[] args){
         GUI gui = new GUI();
         Gamemaster game = new Gamemaster();
@@ -121,17 +124,31 @@ public class GUI extends JFrame{
         game.numberOfPlayers = askNumPlayers(gui);
         game.createPlayers();
         gui.addTurnButtons();
+        game.players = gui.createGuiPlayers(game.players);
+        //gui.repaint();
 
-        while(game.maxGameDays != 0){
-            game.distributeSceneCards();
-            game.resetPlayers();
-            game.resetSets();
-            while(game.board.sceneCardsLeft != 1){
-                
-            }
-        }
         
 
+    }
+
+    public ArrayList<Player> createGuiPlayers(ArrayList<Player> players){
+        int widthOffset = 0;
+        int heightOffset = 0;
+        for (Player getPlayer : players) {
+            JLabel playerLabel = new JLabel();
+            ImageIcon pIcon = new ImageIcon(playerImages[getPlayer.playerNumber - 1][getPlayer.rank - 1]);
+            playerLabel.setIcon(pIcon);
+            playerLabel.setBounds(991 + widthOffset, 248 + heightOffset, pIcon.getIconWidth(), pIcon.getIconHeight());
+            boardPane.add(playerLabel, new Integer(3));
+            playerLabel.setVisible(true);
+            widthOffset += pIcon.getIconWidth();
+            if(getPlayer.playerNumber == 4){
+                heightOffset += pIcon.getIconHeight();
+                widthOffset = 0;
+            }
+            getPlayer.guiLabel = playerLabel;
+        }
+        return players;
     }
 
     public static int askNumPlayers(GUI gui){

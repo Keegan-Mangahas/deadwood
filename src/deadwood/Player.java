@@ -1,6 +1,7 @@
 package deadwood;
 
 import java.util.*;
+import javax.swing.*;
 
 public class Player {
     protected int playerNumber;
@@ -16,6 +17,7 @@ public class Player {
     protected boolean continueTurn = true;
     protected boolean moved = false;
     protected boolean upgraded = false;
+    protected JLabel guiLabel;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){
