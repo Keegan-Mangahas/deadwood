@@ -6,6 +6,8 @@ import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
+
+
 import java.util.*;
 
 public class GUI extends JFrame{
@@ -26,6 +28,7 @@ public class GUI extends JFrame{
     public Boolean moveClicked = false;
 
     public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
+    public static ArrayList<JButton> locationButtons = new ArrayList<JButton>();
 
     public static String[][] playerImages = {
         {"src/images/dice/b1.png", "src/images/dice/b2.png", "src/images/dice/b3.png", "src/images/dice/b4.png", "src/images/dice/b5.png", "src/images/dice/b6.png"},
@@ -122,7 +125,9 @@ public class GUI extends JFrame{
                 if(allowMove){
                     System.out.println("UPGRADE PLAYER");
                 }
-            }     
+            } else if (e.getSource() == locationButton){
+                System.out.println("MOVE TO LOCATION");
+            }    
         }
         public void mousePressed(MouseEvent e) {
         }
@@ -143,14 +148,22 @@ public class GUI extends JFrame{
                 neighbors = getSet.neighborNames;
             }
         }
+        int index = 0;
         for (String string : neighbors) {
-            locationButton = new JButton(string);
-            locationButton.setBackground(Color.white);
-            locationButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
-            locationButton.addMouseListener(new boardMouseListener());
-            boardPane.add(locationButton, 2);
-            locationButton.setVisible(true);
+            locationButtons.add(new JButton(string));
+            locationButtons.get(index).setBackground(Color.white);
+            locationButtons.get(index).setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+            locationButtons.get(index).addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    String choice = e.getActionCommand();
+                    System.out.println("You have picked " + choice);
+                }
+            });
+            boardPane.add(locationButtons.get(index), 2);
+            locationButtons.get(index).setVisible(true);
+
             heightOffset += 30;
+            index++;
         }
         backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
         backButton.setVisible(true);
