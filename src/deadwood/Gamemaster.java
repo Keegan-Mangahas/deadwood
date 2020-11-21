@@ -41,7 +41,7 @@ public class Gamemaster {
             resetSets();
 
             //while board has more than one scene card
-            while(board.sceneCardsLeft != 9){
+            while(board.sceneCardsLeft != 1){
                 runTurn();
                 nextPlayer();
             }
@@ -222,7 +222,7 @@ public class Gamemaster {
         }
     }
 
-    private static void createPlayers(){
+    public static void createPlayers(){
         //create players with stats accordingly
         int startingCredits = 0;
         int startingRank = 1;

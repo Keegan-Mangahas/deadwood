@@ -33,13 +33,7 @@ public class Player {
 
     //add reset for next turn method
     public Board playersTurn(Scanner playerInput, DeadwoodPrinter printer, Board board){
-        /*
-        rehearse()
-        act()
         
-        make it so player can continue turn if applicable
-        ex. player moves, they can upgrade OR take role then work
-        */
         resetBeforeTurn();
         tempBoard = board;
         
@@ -266,7 +260,6 @@ public class Player {
 
         
     }
-
     private Boolean checkRole(int roleNum, Set set, DeadwoodPrinter printer) {
         int i = 0;
         roleNum = roleNum - 1;
