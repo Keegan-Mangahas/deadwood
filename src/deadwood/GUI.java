@@ -112,25 +112,6 @@ public class GUI extends JFrame{
         }
     }
 
-    //move all this into a deadwood.java file when finished
-    public static void main(String[] args){
-        GUI gui = new GUI();
-        Gamemaster game = new Gamemaster();
-
-        gui.setVisible(true);
-        game.createBoard();
-        game.createCards();
-
-        game.numberOfPlayers = askNumPlayers(gui);
-        game.createPlayers();
-        gui.addTurnButtons();
-        game.players = gui.createGuiPlayers(game.players);
-        //gui.repaint();
-
-        
-
-    }
-
     public ArrayList<Player> createGuiPlayers(ArrayList<Player> players){
         int widthOffset = 0;
         int heightOffset = 0;
