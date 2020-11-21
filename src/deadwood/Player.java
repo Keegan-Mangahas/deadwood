@@ -18,6 +18,7 @@ public class Player {
     protected boolean moved = false;
     protected boolean upgraded = false;
     protected JLabel guiLabel;
+    protected int widthOffSet;
 
     //player constructor
     public Player(int playerNum, int dol, int cred, int ran){

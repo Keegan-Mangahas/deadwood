@@ -199,7 +199,7 @@ public class GUI extends JFrame{
                 currentSet = set;
             }
         }
-        currentPlayer.guiLabel.setBounds(Integer.parseInt(currentSet.x) , Integer.parseInt(currentSet.y) + 50, Integer.parseInt(currentSet.w), Integer.parseInt(currentSet.h));
+        currentPlayer.guiLabel.setBounds(Integer.parseInt(currentSet.x) + currentPlayer.widthOffSet , Integer.parseInt(currentSet.y) + 50, Integer.parseInt(currentSet.w), Integer.parseInt(currentSet.h));
 
         //runTurn(currentPlayer); this is called in Deadwood.movePlayerHere
     }
@@ -242,6 +242,7 @@ public class GUI extends JFrame{
 
     //create the each player on the GUI and return players arraylist now that each player has a label
     public ArrayList<Player> createGuiPlayers(ArrayList<Player> players){
+        int playerWidthOffset = 0;
         int widthOffset = 0;
         int heightOffset = 0;
         for (Player getPlayer : players) {
@@ -257,6 +258,8 @@ public class GUI extends JFrame{
                 widthOffset = 0;
             }
             getPlayer.guiLabel = playerLabel;
+            getPlayer.widthOffSet =  playerWidthOffset;
+            playerWidthOffset += pIcon.getIconWidth()/2;
         }
         return players;
         
