@@ -20,6 +20,7 @@ public class GUI extends JFrame{
     JButton moveButton;
     JButton workButton;
     JButton upgradeButton;
+    JButton skipButton;
     JButton backButton;
     JButton locationButton;
 
@@ -65,28 +66,38 @@ public class GUI extends JFrame{
 
         moveButton = new JButton("MOVE");
         moveButton.setBackground(Color.white);
-        moveButton.setBounds(boardIcon.getIconWidth() + 10, 30, 100, 20);
+        moveButton.setBounds(1200 + 10, 30, 100, 20);
         moveButton.addMouseListener(new boardMouseListener());
+        moveButton.setVisible(false);
 
         workButton = new JButton("WORK");
         workButton.setBackground(Color.white);
-        workButton.setBounds(boardIcon.getIconWidth() + 10, 60, 100, 20);
+        workButton.setBounds(1200 + 10, 60, 100, 20);
         workButton.addMouseListener(new boardMouseListener());
+        workButton.setVisible(false);
 
         upgradeButton = new JButton("UPGRADE");
         upgradeButton.setBackground(Color.white);
-        upgradeButton.setBounds(boardIcon.getIconWidth() + 10, 90, 100, 20);
+        upgradeButton.setBounds(1200 + 10, 90, 100, 20);
         upgradeButton.addMouseListener(new boardMouseListener());
+        upgradeButton.setVisible(false);
+
+        skipButton = new JButton("SKIP");
+        skipButton.setBackground(Color.white);
+        skipButton.setBounds(1200 + 10, 120, 100, 20);
+        skipButton.addMouseListener(new boardMouseListener());
+        skipButton.setVisible(false);
 
         backButton = new JButton("BACK");
         backButton.setBackground(Color.white);
-        backButton.setBounds(boardIcon.getIconWidth() + 10, 90, 100, 20);
+        backButton.setBounds(1200 + 10, 90, 100, 20);
         backButton.addMouseListener(new boardMouseListener());
         backButton.setVisible(false);
 
         boardPane.add(backButton, new Integer(2));
         boardPane.add(moveButton, new Integer(2));
         boardPane.add(workButton, new Integer(2));
+        boardPane.add(skipButton, new Integer(2));
         boardPane.add(upgradeButton, new Integer(2));
 
         /////////////////////////////
@@ -94,40 +105,61 @@ public class GUI extends JFrame{
         /////////////////////////////
     }
 
-    public void addTurnButtons(){
+    public void addAllTurnButtons(){
         this.moveButton.setVisible(true);
         this.workButton.setVisible(true);
         this.upgradeButton.setVisible(true);
+        this.skipButton.setVisible(true);
     }
 
-    public void removeTurnButtons(){
+    public void removeAllTurnButtons(){
         this.moveButton.setVisible(false);
         this.workButton.setVisible(false);
         this.upgradeButton.setVisible(false);
+        this.skipButton.setVisible(false);
+    }
+
+    public void addSelectedTurnButtons(int choice){
+        if(choice == 0){
+            //TODO: make act and rehearse buttons visible only
+        } else if(choice == 1){
+            this.moveButton.setVisible(true);
+            this.workButton.setVisible(true);
+            this.upgradeButton.setVisible(true);
+            this.skipButton.setVisible(true);
+        } else if(choice == 2){
+            this.moveButton.setVisible(false);
+            this.workButton.setVisible(true);
+            this.upgradeButton.setVisible(true);
+            this.skipButton.setVisible(true);
+        } else if(choice == 3){
+            this.moveButton.setVisible(true);
+            this.workButton.setVisible(true);
+            this.upgradeButton.setVisible(false);
+            this.skipButton.setVisible(true);
+        } else if(choice == 4){
+            this.moveButton.setVisible(false);
+            this.workButton.setVisible(true);
+            this.upgradeButton.setVisible(false);
+            this.skipButton.setVisible(true);
+        }
     }
 
     class boardMouseListener implements MouseListener{
         // Code for the different button clicks
         public void mouseClicked(MouseEvent e) {
             if (e.getSource() == moveButton){
-                Boolean allowMove = Deadwood.checkTurnStatus("move");
-                if(allowMove){
-                    System.out.println("MOVE PLAYER");
-                    Deadwood.movePlayer();
-                }
+                Deadwood.movePlayer();
             } else if (e.getSource() == workButton){
-                Boolean allowMove = Deadwood.checkTurnStatus("work");
-                if(allowMove){
-                    System.out.println("WORK PLAYER");
-                }
+                System.out.println("WORK PLAYER");
             } else if (e.getSource() == upgradeButton){
-                Boolean allowMove = Deadwood.checkTurnStatus("upgrade");
-                if(allowMove){
-                    System.out.println("UPGRADE PLAYER");
-                }
+                System.out.println("UPGRADE PLAYER");
             } else if (e.getSource() == locationButton){
                 System.out.println("MOVE TO LOCATION");
-            }    
+            }  else if (e.getSource() == skipButton){
+                System.out.println("SKIPPING TURN");
+                Deadwood.endTurn();
+            }  
         }
         public void mousePressed(MouseEvent e) {
         }
@@ -139,8 +171,41 @@ public class GUI extends JFrame{
         }
     }
 
+    public void runTurn(Player currentPlayer){
+        System.out.println(currentPlayer.printPlayerData());
+        if(currentPlayer.continueTurn == true){
+            if(currentPlayer.onRole == true){
+                System.out.println("SHOW ACT REHEARSE BUTTONS");
+            } else if(!currentPlayer.moved && !currentPlayer.upgraded){
+                System.out.println("MOVE UPGRADE WORK SKIP BUTTONS");
+                addSelectedTurnButtons(1);
+            } else if(currentPlayer.moved && !currentPlayer.upgraded){
+                System.out.println("UPGRADE WORK SKIP BUTTONS");
+                addSelectedTurnButtons(2);
+            } else if(!currentPlayer.moved && currentPlayer.upgraded){
+                System.out.println("MOVE WORK SKIP BUTTONS");
+                addSelectedTurnButtons(3);
+            } else if(currentPlayer.moved && currentPlayer.upgraded){
+                System.out.println("WORK SKIP BUTTONS");
+                addSelectedTurnButtons(4);
+            }
+        }
+    }
+
+    public void updatePlayerLocation(Player currentPlayer, ArrayList<Set> sets){
+        Set currentSet = new Set();
+        for (Set set : sets) {
+            if(currentPlayer.location.equals(set.setName)){
+                currentSet = set;
+            }
+        }
+        currentPlayer.guiLabel.setBounds(Integer.parseInt(currentSet.x) , Integer.parseInt(currentSet.y) + 50, Integer.parseInt(currentSet.w), Integer.parseInt(currentSet.h));
+
+        //runTurn(currentPlayer); this is called in Deadwood.movePlayerHere
+    }
+
     public void addMoveOptions(Gamemaster game){
-        removeTurnButtons();
+        removeAllTurnButtons();
         int heightOffset = 0;
         ArrayList<String> neighbors = new ArrayList<String>();
         for (Set getSet : Gamemaster.board.sets) {
@@ -157,6 +222,12 @@ public class GUI extends JFrame{
                 public void actionPerformed(ActionEvent e){
                     String choice = e.getActionCommand();
                     System.out.println("You have picked " + choice);
+                    Deadwood.movePlayerHere(choice);
+                    for (JButton button : locationButtons) {
+                        button.setVisible(false);
+                    }
+                    locationButtons.clear();
+                    backButton.setVisible(false);
                 }
             });
             boardPane.add(locationButtons.get(index), 2);
@@ -167,7 +238,6 @@ public class GUI extends JFrame{
         }
         backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
         backButton.setVisible(true);
-
     }
 
     //create the each player on the GUI and return players arraylist now that each player has a label

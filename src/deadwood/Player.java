@@ -27,7 +27,7 @@ public class Player {
         rank = ran;
     }
 
-    private void resetBeforeTurn(){
+    protected void resetBeforeTurn(){
         continueTurn = true;
         moved = false;
         upgraded = false;
@@ -399,13 +399,13 @@ public class Player {
         }
     }
     
-    private void movedTo(DeadwoodPrinter printer) {
+    protected void movedTo(DeadwoodPrinter printer) {
         Set currentSet = new Set();
         int setIndex = 0;
         for (Set getSet : tempBoard.sets) {
             if(location.equals(getSet.setName)){
                 currentSet = getSet;  
-                if(currentSet.sceneDiscovered == false){
+                if(currentSet.sceneDiscovered == false && !"trailer".equals(currentSet.setName) && !"office".equals(currentSet.setName)){
                     currentSet.sceneDiscovered = true;
                     printer.discoveredScene(currentSet);
                     tempBoard.sets.set(setIndex, currentSet);
@@ -417,6 +417,7 @@ public class Player {
             setIndex++;
         }
     }
+    
 
     private void getSetRoleData(DeadwoodPrinter printer){
         if("trailer".equals(location)){
