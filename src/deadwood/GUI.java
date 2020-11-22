@@ -248,13 +248,31 @@ public class GUI extends JFrame{
         //runTurn(currentPlayer); this is called in Deadwood.movePlayerHere
     }
 
+    
+    public void revealSceneCard(Player currentPlayer, ArrayList<Set> sets){
+        Set currentSet = new Set();
+        for (Set set : sets) {
+            if(currentPlayer.location.equals(set.setName)){
+                currentSet = set;
+            }
+        }
+        if(!"office".equals(currentSet.setName) && !"trailer".equals(currentSet.setName)){
+            JLabel cardLabel = currentSet.cardBackLabel;
+            boardPane.remove(cardLabel);
+            boardPane.revalidate();
+            boardPane.repaint();
+        }
+    }
+
     public void addMoveOptions(Gamemaster game){
         removeAllTurnButtons();
         int heightOffset = 0;
+        Set playerLocationSet = new Set();
         ArrayList<String> neighbors = new ArrayList<String>();
         for (Set getSet : Gamemaster.board.sets) {
             if(game.currentPlayer.location.equals(getSet.setName)){
                 neighbors = getSet.neighborNames;
+                playerLocationSet = getSet;
             }
         }
         int index = 0;
@@ -270,6 +288,7 @@ public class GUI extends JFrame{
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
+                    
                     locationButtons.clear();
                     backButton.setVisible(false);
                 }
@@ -284,10 +303,11 @@ public class GUI extends JFrame{
         backButton.setVisible(true);
     }
 
+
     public void addGUISceneCards(ArrayList<Set> sets){
         for (Set set : sets) {
             if(!"trailer".equals(set.setName) && !"office".equals(set.setName)){
-                Scene setScene = set.currentScene;
+                Scene setScene = set.currentScene; //TODO: Not needed?
                 placeSceneCard(set);
                 placeSceneCardBack(set);
             }

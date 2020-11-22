@@ -50,10 +50,12 @@ public class Deadwood {
         game.currentPlayer.location = location;
         System.out.println(game.currentPlayer.printPlayerData());
         game.currentPlayer.movedTo(game.printer);
+        
 
         game.currentPlayer.moved = true;
 
         gui.updatePlayerLocation(game.currentPlayer, game.board.sets);
+        gui.revealSceneCard(game.currentPlayer, game.board.sets);
         gui.runTurn(game.currentPlayer);
     }
 }
