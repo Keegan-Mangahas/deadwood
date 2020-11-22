@@ -15,6 +15,8 @@ public class Deadwood {
         game.createPlayers();
 
         game.distributeSceneCards(); //need to make this happen when day resets
+        gui.addGUISceneCards(game.board.sets); //need to make this happen when day resets
+
         game.resetPlayers(); //need to make this happen when day resets
         game.resetSets(); //need to make this happen when day resets
 
@@ -22,8 +24,6 @@ public class Deadwood {
         
         game.players = gui.createGuiPlayers(game.players);
         gui.runTurn(game.currentPlayer);
-        
-
         
     }
     public static void endTurn(){

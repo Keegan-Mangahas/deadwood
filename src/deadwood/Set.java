@@ -2,8 +2,11 @@ package deadwood;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.*;
 
 public class Set {
+    protected JLabel cardLabel;
+    protected JLabel cardBackLabel;
     protected String setName;
     protected String x;
     protected String y;

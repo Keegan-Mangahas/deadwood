@@ -4,6 +4,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class Player {
+    protected String playerColor;
     protected int playerNumber;
     protected int dollars;
     protected int credits;

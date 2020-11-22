@@ -16,9 +16,10 @@ public class GUI extends JFrame{
     //labels
     JLabel boardLabel;
     JLabel menuLabel;
+    JLabel cardLabel;
+
     JLabel numberOfDays = new JLabel();
     JLabel sceneCardsLeft = new JLabel();
-
     JLabel currentPlayer = new JLabel();
     JLabel playerRank = new JLabel();
     JLabel playerCredits = new JLabel();
@@ -39,6 +40,8 @@ public class GUI extends JFrame{
 
     public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
     public static ArrayList<JButton> locationButtons = new ArrayList<JButton>();
+
+    public static String[] playerColors = {"Blue", "Cyan", "Green", "Orange", "Pink", "Red", "Violet", "Yellow"};
 
     public static String[][] playerImages = {
         {"src/images/dice/b1.png", "src/images/dice/b2.png", "src/images/dice/b3.png", "src/images/dice/b4.png", "src/images/dice/b5.png", "src/images/dice/b6.png"},
@@ -180,8 +183,6 @@ public class GUI extends JFrame{
 
     public void runTurn(Player currentPlayer){
         displayInfo(currentPlayer);
-
-        System.out.println(currentPlayer.printPlayerData());
         if(currentPlayer.continueTurn == true){
             if(currentPlayer.onRole == true){
                 System.out.println("SHOW ACT REHEARSE BUTTONS");
@@ -210,7 +211,7 @@ public class GUI extends JFrame{
         sceneCardsLeft.setBounds(1200 + 10, 520, 300, 20);
         boardPane.add(sceneCardsLeft, new Integer(2));
 
-        currentPlayer.setText("Current player: Player " + player.playerNumber);
+        currentPlayer.setText("Current player: " + player.playerColor);
         currentPlayer.setBounds(1200 + 10, 540, 300, 20);
         boardPane.add(currentPlayer, new Integer(2));
 
@@ -283,6 +284,34 @@ public class GUI extends JFrame{
         backButton.setVisible(true);
     }
 
+    public void addGUISceneCards(ArrayList<Set> sets){
+        for (Set set : sets) {
+            if(!"trailer".equals(set.setName) && !"office".equals(set.setName)){
+                Scene setScene = set.currentScene;
+                placeSceneCard(set);
+                placeSceneCardBack(set);
+            }
+        }
+    }
+
+    public void placeSceneCard(Set set){
+        cardLabel = new JLabel();
+        ImageIcon cardIcon = new ImageIcon("src/images/cards/" + set.currentScene.sceneImage);
+        cardLabel.setIcon(cardIcon);
+        cardLabel.setBounds(Integer.parseInt(set.x), Integer.parseInt(set.y), Integer.parseInt(set.w), Integer.parseInt(set.h));
+        set.cardLabel = cardLabel;
+        boardPane.add(cardLabel, new Integer(2));
+    }
+
+    public void placeSceneCardBack(Set set){
+        cardLabel = new JLabel();
+        ImageIcon cardBackIcon = new ImageIcon("src/images/CardBack-small.jpg");
+        cardLabel.setIcon(cardBackIcon);
+        cardLabel.setBounds(Integer.parseInt(set.x), Integer.parseInt(set.y), Integer.parseInt(set.w), Integer.parseInt(set.h));
+        set.cardBackLabel = cardLabel;
+        boardPane.add(cardLabel, new Integer(3));
+    }
+
     //create the each player on the GUI and return players arraylist now that each player has a label
     public ArrayList<Player> createGuiPlayers(ArrayList<Player> players){
         int playerWidthOffset = 0;
@@ -302,10 +331,10 @@ public class GUI extends JFrame{
             }
             getPlayer.guiLabel = playerLabel;
             getPlayer.widthOffSet =  playerWidthOffset;
+            getPlayer.playerColor = playerColors[getPlayer.playerNumber - 1];
             playerWidthOffset += pIcon.getIconWidth()/2;
         }
         return players;
-        
     }
 
     public static int askNumPlayers(GUI gui){
