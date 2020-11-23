@@ -37,9 +37,62 @@ public class Deadwood {
             }
         } else{
             gui.showInvalid();
+            gui.runTurn(game.currentPlayer);
             return;
         }
         gui.showInvalid();
+        gui.runTurn(game.currentPlayer);
+    }
+
+    public static void addToRole(String roleName){
+        int setIndex = 0;
+        Set playerSet = new Set();
+        for (Set set : game.currentPlayer.tempBoard.sets) {
+            if(game.currentPlayer.location.equals(set.setName)){
+                playerSet = set;
+                break;
+            }
+            setIndex++;
+        }
+
+        Role playerRole = new Role();
+        int nonStarIndex = 0;
+        int starIndex = 0;
+        for (Role role : playerSet.roles) {
+            if(roleName.equals(role.roleName)){
+                playerRole = role;
+                break;
+            }
+            nonStarIndex++;
+        }
+        for (Role role : playerSet.currentScene.roles) {
+            if(roleName.equals(role.roleName)){
+                playerRole = role;
+                break;
+            }
+            starIndex++;
+        }
+        if(playerRole.roleTaken == true || playerRole.roleDifficulty > game.currentPlayer.rank){
+            gui.showInvalid();
+            gui.runTurn(game.currentPlayer);
+            return;
+        }
+        playerRole.roleTaken = true;
+        game.currentPlayer.role = playerRole;
+        game.currentPlayer.onRole = true;
+
+        if(game.currentPlayer.role.starring == false){
+            Set tempSet = game.board.sets.get(setIndex);
+            tempSet.roles.set(nonStarIndex, playerRole);
+            game.board.sets.set(setIndex, tempSet);
+        } else {
+            Set tempSet = game.board.sets.get(setIndex);
+            tempSet.currentScene.roles.set(starIndex, playerRole);
+            game.board.sets.set(setIndex, tempSet);
+        }
+        gui.putPlayerOnRole(game.currentPlayer, game.board.sets);
+        endTurn();
+
     }
 
     public static void endTurn(){

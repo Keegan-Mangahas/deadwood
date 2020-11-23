@@ -314,6 +314,21 @@ public class GUI extends JFrame{
         JOptionPane.showMessageDialog(null, "You cannot do that");
     }
 
+    public void putPlayerOnRole(Player currentPlayer, ArrayList<Set> sets){
+        Set currentSet = new Set();
+        for (Set set : sets) {
+            if(currentPlayer.location.equals(set.setName)){
+                currentSet = set;
+            }
+        }
+        if(currentPlayer.role.starring == false){
+            currentPlayer.guiLabel.setBounds(Integer.parseInt(currentPlayer.role.x), Integer.parseInt(currentPlayer.role.y), Integer.parseInt(currentPlayer.role.w), Integer.parseInt(currentPlayer.role.h));
+        } else {
+            currentPlayer.guiLabel.setBounds(Integer.parseInt(currentSet.x) + Integer.parseInt(currentPlayer.role.x), Integer.parseInt(currentSet.y) + 10, Integer.parseInt(currentSet.w), Integer.parseInt(currentSet.h));
+        }
+        
+    }
+
     public void updatePlayerLocation(Player currentPlayer, ArrayList<Set> sets){
         Set currentSet = new Set();
         for (Set set : sets) {
@@ -363,7 +378,7 @@ public class GUI extends JFrame{
                     roleLabel.setVisible(false);
                     roleButtons.clear();
                     backButton.setVisible(false);
-                    //TODO: PUT PLAYER ON ROLE
+                    Deadwood.addToRole(choice);
                 }
             });
             boardPane.add(roleButtons.get(index), new Integer(2));
@@ -385,7 +400,7 @@ public class GUI extends JFrame{
                     roleLabel.setVisible(false);
                     roleButtons.clear();
                     backButton.setVisible(false);
-                    //TODO: PUT PLAYER ON ROLE
+                    Deadwood.addToRole(choice);
                 }
             });
             boardPane.add(roleButtons.get(index), new Integer(2));
@@ -395,7 +410,7 @@ public class GUI extends JFrame{
         }
         backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
         backButton.setVisible(true);
-    }
+    } 
 
     public void addUpgradeOptions(Gamemaster game){
         removeAllTurnButtons();
@@ -561,7 +576,7 @@ public class GUI extends JFrame{
             ImageIcon pIcon = new ImageIcon(playerImages[getPlayer.playerNumber - 1][getPlayer.rank - 1]);
             playerLabel.setIcon(pIcon);
             playerLabel.setBounds(991 + widthOffset, 248 + heightOffset, pIcon.getIconWidth(), pIcon.getIconHeight());
-            boardPane.add(playerLabel, new Integer(3));
+            boardPane.add(playerLabel, new Integer(5));
             playerLabel.setVisible(true);
             widthOffset += pIcon.getIconWidth();
             if(getPlayer.playerNumber == 4){
