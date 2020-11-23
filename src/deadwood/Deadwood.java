@@ -1,5 +1,7 @@
 package deadwood;
 
+import java.util.*;
+
 public class Deadwood {
         private static GUI gui = new GUI();
         private static Gamemaster game = new Gamemaster();
@@ -27,7 +29,45 @@ public class Deadwood {
     }
 
     public static void act(){
-        
+        Random die = new Random();
+        int dieRoll = 1 + die.nextInt(6 - 1 + 1);
+
+        Set findSet = new Set();
+        int setIndex = 0;
+        for (Set getSet : game.board.sets) {
+            if(game.currentPlayer.location.equals(getSet.setName)){
+                findSet = getSet;
+                break;
+            }
+            setIndex++;
+        }
+
+        int rollTotal = dieRoll + game.currentPlayer.rehearsalTokens;
+        if(rollTotal >= findSet.currentScene.sceneBudget){
+            gui.addTake(findSet);
+            if(game.currentPlayer.role.starring == true){
+                game.currentPlayer.credits += 2;
+                gui.showActSuccess(0, 2);
+            } else if(game.currentPlayer.role.starring == false) {
+                game.currentPlayer.credits += 1;
+                game.currentPlayer.dollars += 1;
+                gui.showActSuccess(1, 1);
+            }
+            if(findSet.takesLeft == 0){
+                game.board.sceneCardsLeft--;
+                findSet.sceneWrapped = true;
+                game.board.sets.set(setIndex, findSet);
+                game.board.wrapThisSet = findSet; //TODO: WRAP SET
+            }
+        } else {
+            if(game.currentPlayer.role.starring == true){
+                gui.showActFail(0, 0);
+            } else if (game.currentPlayer.role.starring == false){
+                game.currentPlayer.dollars += 1;
+                gui.showActFail(1, 0);
+            }
+        }
+        endTurn();
     }
 
     public static void rehearse(){

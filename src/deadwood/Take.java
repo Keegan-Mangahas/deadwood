@@ -1,6 +1,9 @@
 package deadwood;
 
+import javax.swing.*;
+
 public class Take {
+    JLabel takeLabel;
     public Take(){
             
     }

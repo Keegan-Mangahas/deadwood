@@ -18,6 +18,7 @@ public class GUI extends JFrame{
     JLabel upgradeLabel;
     JLabel currencyLabel;
     JLabel roleLabel;
+    JLabel takeLabel;
 
     JLabel numberOfDays = new JLabel();
     JLabel sceneCardsLeft = new JLabel();
@@ -41,7 +42,7 @@ public class GUI extends JFrame{
     JButton creditButton;
     JButton roleButton;
 
-    public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
+    public static ArrayList<JLabel> takeLabels = new ArrayList<JLabel>();
     public static ArrayList<JButton> locationButtons = new ArrayList<JButton>();
     public static ArrayList<JButton> upgradeButtons = new ArrayList<JButton>();
     public static ArrayList<JButton> roleButtons = new ArrayList<JButton>();
@@ -183,10 +184,12 @@ public class GUI extends JFrame{
     public void removeAllExtraLabels(){
         this.upgradeLabel.setVisible(false);
         this.locationLabel.setVisible(false);
-        this.currencyLabel.setVisible(false);
+        this.currencyLabel.setVisible(false);;
+        this.roleLabel.setVisible(false);;
     }
 
     public void addSelectedTurnButtons(int choice){
+        removeAllExtraLabels();
         this.menuLabel.setVisible(true);
         if(choice == 0){
             removeAllTurnButtons();
@@ -354,6 +357,14 @@ public class GUI extends JFrame{
         JOptionPane.showMessageDialog(null, "You rehearsed your roll!");
     }
 
+    public void showActSuccess(int dol, int cred){
+        JOptionPane.showMessageDialog(null, "You successfully acted!! You gained "+dol+" dollar(s) and "+cred+" credit(s)!");
+    }
+
+    public void showActFail(int dol, int cred){
+        JOptionPane.showMessageDialog(null, "You failed :( You gained "+dol+" dollar(s) and "+cred+" credit(s)!");
+    }
+
     public void putPlayerOnRole(Player currentPlayer, ArrayList<Set> sets){
         Set currentSet = new Set();
         for (Set set : sets) {
@@ -395,6 +406,18 @@ public class GUI extends JFrame{
             boardPane.revalidate();
             boardPane.repaint();
         }
+    }
+
+    public void addTake(Set set){
+        int takeIndex = set.takesLeft;
+        Take getTake = set.takesData.get(takeIndex);
+        takeLabel = new JLabel();
+        ImageIcon takeIcon = new ImageIcon("src/images/shot.png");
+        takeLabel.setIcon(takeIcon);
+        takeLabel.setBounds(Integer.parseInt(getTake.x), Integer.parseInt(getTake.y), Integer.parseInt(getTake.w), Integer.parseInt(getTake.h));
+        boardPane.add(takeLabel, new Integer(2));
+        takeLabel.setVisible(true);
+        takeLabels.add(takeLabel);
     }
 
     public void showRoleOptions(Set set){

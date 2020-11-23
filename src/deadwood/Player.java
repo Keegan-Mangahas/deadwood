@@ -359,7 +359,6 @@ public class Player {
                 findSet.sceneWrapped = true;
                 tempBoard.sets.set(setIndex, findSet);
                 tempBoard.wrapThisSet = findSet;
-
             }
         } else {
             printer.actingFail();
