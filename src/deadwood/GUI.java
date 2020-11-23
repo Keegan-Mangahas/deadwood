@@ -408,6 +408,18 @@ public class GUI extends JFrame{
         }
     }
 
+    public void wrapSceneCard(ArrayList<Set> sets){
+        Set currentSet = new Set();
+        for (Set set : sets) {
+            if(set.sceneWrapped == true){
+                JLabel cardLabel = set.cardLabel;
+                boardPane.remove(cardLabel);
+                boardPane.revalidate();
+                boardPane.repaint();
+            }
+        }
+    }
+
     public void addTake(Set set){
         int takeIndex = set.takesLeft;
         Take getTake = set.takesData.get(takeIndex);
@@ -426,7 +438,6 @@ public class GUI extends JFrame{
         int heightOffset = 0;
 
         int index = 0;
-        int i = 0;
         for (Role role : set.roles) {
             roleButtons.add(new JButton(role.roleName));
             roleButtons.get(index).setBackground(Color.white);

@@ -177,6 +177,7 @@ public class Gamemaster {
                         printer.wrapBonusDollar(player.playerNumber, role.roleDifficulty);
                         player.role = null;
                         player.onRole = false;
+                        player.rehearsalTokens = 0;
                     }
                 }
             }

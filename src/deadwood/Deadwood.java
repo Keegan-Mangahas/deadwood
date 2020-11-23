@@ -44,6 +44,7 @@ public class Deadwood {
 
         int rollTotal = dieRoll + game.currentPlayer.rehearsalTokens;
         if(rollTotal >= findSet.currentScene.sceneBudget){
+            findSet.takesLeft--;
             gui.addTake(findSet);
             if(game.currentPlayer.role.starring == true){
                 game.currentPlayer.credits += 2;
@@ -58,6 +59,7 @@ public class Deadwood {
                 findSet.sceneWrapped = true;
                 game.board.sets.set(setIndex, findSet);
                 game.board.wrapThisSet = findSet; //TODO: WRAP SET
+                wrapSet();
             }
         } else {
             if(game.currentPlayer.role.starring == true){
@@ -68,6 +70,52 @@ public class Deadwood {
             }
         }
         endTurn();
+    }
+
+    public static void wrapSet(){
+        Set wrapThis = game.board.wrapThisSet;
+        int sceneBudget = wrapThis.currentScene.sceneBudget;
+
+        Random die = new Random();
+        int[] dieRolls = new int[sceneBudget];
+        for(int i = 0; i < dieRolls.length; i++){
+            int roll = 1 + die.nextInt(6 - 1 + 1);
+            dieRolls[i] = roll;
+        }
+
+        int dieRollIndex = 0;
+        for (Player player : game.players) {
+            for (Role role : wrapThis.roles) {
+                if(player.onRole == true){
+                    if(player.role.roleName.equals(role.roleName)){
+                        player.dollars += dieRolls[dieRollIndex];
+                        dieRollIndex++;
+                        player.role = null;
+                        player.onRole = false;
+                        player.rehearsalTokens = 0;
+                    }
+                }
+                if(dieRollIndex == sceneBudget){
+                    break;
+                }
+            }
+            if(dieRollIndex == sceneBudget){
+                break;
+            }
+        }
+        for (Player player : game.players) {
+            for (Role role : wrapThis.currentScene.roles) {
+                if(player.onRole == true){
+                    if(player.role.roleName.equals(role.roleName)){
+                        player.dollars += role.roleDifficulty;
+                        player.role = null;
+                        player.onRole = false;
+                        player.rehearsalTokens = 0;
+                    }
+                }
+            }
+        }
+        gui.wrapSceneCard(game.board.sets);
     }
 
     public static void rehearse(){
