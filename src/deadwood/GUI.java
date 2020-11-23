@@ -16,6 +16,7 @@ public class GUI extends JFrame{
     JLabel playerLabel;
     JLabel locationLabel;
     JLabel upgradeLabel;
+    JLabel currencyLabel;
 
     JLabel numberOfDays = new JLabel();
     JLabel sceneCardsLeft = new JLabel();
@@ -33,8 +34,8 @@ public class GUI extends JFrame{
     JButton backButton;
     JButton locationButton;
     JButton upgradeOptionButton;
-
-    
+    JButton dollarButton;
+    JButton creditButton;
 
     public Boolean moveClicked = false;
 
@@ -86,6 +87,11 @@ public class GUI extends JFrame{
         upgradeLabel.setBounds(1200 + 40 , 0, 100, 20);
         boardPane.add(upgradeLabel, 2);
         upgradeLabel.setVisible(false);
+
+        currencyLabel = new JLabel("PURCHASE WITH");
+        currencyLabel.setBounds(1200 + 40 , 0, 100, 20);
+        boardPane.add(currencyLabel, 2);
+        currencyLabel.setVisible(false);
         
 
         moveButton = new JButton("MOVE");
@@ -114,8 +120,17 @@ public class GUI extends JFrame{
 
         backButton = new JButton("BACK");
         backButton.setBackground(Color.white);
-        backButton.setBounds(1200 + 10, 90, 100, 20);
         backButton.addMouseListener(new boardMouseListener());
+        backButton.setVisible(false);
+
+        creditButton = new JButton("Credits");
+        creditButton.setBackground(Color.white);
+        creditButton.setBounds(1200 + 10, 30, 100, 20);
+        backButton.setVisible(false);
+
+        dollarButton = new JButton("Dollars");
+        dollarButton.setBackground(Color.white);
+        dollarButton.setBounds(1200 + 10, 60, 100, 20);
         backButton.setVisible(false);
 
         boardPane.add(backButton, new Integer(2));
@@ -143,6 +158,7 @@ public class GUI extends JFrame{
     public void removeAllExtraLabels(){
         this.upgradeLabel.setVisible(false);
         this.locationLabel.setVisible(false);
+        this.currencyLabel.setVisible(false);
     }
 
     public void addSelectedTurnButtons(int choice){
@@ -198,9 +214,17 @@ public class GUI extends JFrame{
                 }
                 locationLabel.setVisible(false);
                 locationButtons.clear();
-                
-                backButton.setVisible(false);
 
+                creditButton.setVisible(false);
+                dollarButton.setVisible(false);
+                for(ActionListener act : creditButton.getActionListeners()){
+                    creditButton.removeActionListener(act);
+                }
+                for(ActionListener act : dollarButton.getActionListeners()){
+                    dollarButton.removeActionListener(act);
+                }
+
+                backButton.setVisible(false);
                 Deadwood.back();
             } else if (e.getSource() == skipButton){
                 System.out.println("SKIPPING TURN");
@@ -324,6 +348,7 @@ public class GUI extends JFrame{
                     upgradeLabel.setVisible(false);
                     upgradeButtons.clear();
                     backButton.setVisible(false);
+                    addCurrencyOptions(choice);
                 }
             });
             boardPane.add(upgradeButtons.get(index), new Integer(2));
@@ -333,6 +358,53 @@ public class GUI extends JFrame{
         }
         backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
         backButton.setVisible(true);
+    }
+
+    public void addCurrencyOptions(int rankChoice){
+        currencyLabel.setVisible(true);
+        creditButton.setVisible(true);
+        creditButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                System.out.println("You have picked credits");
+                creditButton.removeActionListener(this);
+                dollarButton.removeActionListener(this);
+                creditButton.setVisible(false);
+                dollarButton.setVisible(false);
+                currencyLabel.setVisible(false);
+                backButton.setVisible(false);
+                Deadwood.upgradePlayerRank(rankChoice, "credits");
+            }
+        });
+        boardPane.add(creditButton, new Integer(2));
+
+        dollarButton.setVisible(true);
+        dollarButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                System.out.println("You have picked dollars");
+                creditButton.removeActionListener(this);
+                dollarButton.removeActionListener(this);
+                dollarButton.setVisible(false);
+                creditButton.setVisible(false);
+                currencyLabel.setVisible(false);
+                backButton.setVisible(false);
+                Deadwood.upgradePlayerRank(rankChoice, "dollars");
+            }
+        });
+        boardPane.add(dollarButton, new Integer(2));
+
+        backButton.setBounds(1200 + 10, 90, 100, 20);
+        backButton.setVisible(true);
+    }
+
+    public void changePlayerRankGUI(Player currentPlayer){
+        ImageIcon newRankIcon = new ImageIcon(playerImages[currentPlayer.playerNumber - 1][currentPlayer.rank - 1]);
+        currentPlayer.guiLabel.setIcon(newRankIcon);
+        boardPane.revalidate();
+        boardPane.repaint();
+    }
+
+    public void insufficent(){
+        JOptionPane.showMessageDialog(null, "Upgrade failed, not enough money");
     }
 
     public void addMoveOptions(Gamemaster game){

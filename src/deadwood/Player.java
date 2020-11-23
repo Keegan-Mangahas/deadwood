@@ -441,6 +441,44 @@ public class Player {
         }
     }
 
+    protected boolean upgradeRank(int rank, String currency){
+        switch(rank){
+            case 2:
+                return upgradeP2(currency, rank, 4, 5);
+            case 3:
+                return upgradeP2(currency, rank, 10, 10);
+            case 4:
+                return upgradeP2(currency, rank, 18, 15);
+            case 5:
+                return upgradeP2(currency, rank, 28, 20);
+            case 6:
+                return upgradeP2(currency, rank, 40, 25);
+        }
+        return false;
+    }
+
+    protected boolean upgradeP2(String currency, int newRank, int dolPrice, int credPrice){
+        switch(currency){
+            case "credits":
+                if(credits >= credPrice){
+                    this.credits -= credPrice;
+                    this.rank = newRank;
+                    return true;
+                } else {
+                    return false;
+                }
+            case "dollars":
+                if(dollars >= dolPrice){
+                    this.dollars -= dolPrice;
+                    this.rank = newRank;
+                    return true;
+                } else {
+                    return false;
+            }
+        }
+        return false;
+    }
+
     private boolean upgradeRank(Scanner playerInput, DeadwoodPrinter printer) {
         //THIS NEEDS TO CHECK IF PLAYER IS IN UPGRADE ROOM STILL
         //REPLACE IF STATEMENT

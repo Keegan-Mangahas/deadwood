@@ -26,6 +26,7 @@ public class Deadwood {
         gui.runTurn(game.currentPlayer);
         
     }
+
     public static void endTurn(){
         game.board = game.currentPlayer.tempBoard; //update board
 
@@ -47,7 +48,6 @@ public class Deadwood {
     }
     
     public static void upgradePlayer(){
-        /*
         if(game.currentPlayer.rank == 6){
             gui.showInvalid();
         } else if("office".equals(game.currentPlayer.location)){
@@ -55,8 +55,19 @@ public class Deadwood {
         } else{
             gui.showInvalid();
         }
-        */ //TODO: UNCOMMENT THIS
-        gui.addUpgradeOptions(game);
+    }
+
+    public static void upgradePlayerRank(int rank, String currency){
+        System.out.println("Rank: "+game.currentPlayer.rank+"Credits "+game.currentPlayer.credits);
+        game.currentPlayer.upgraded = game.currentPlayer.upgradeRank(rank, currency);
+        System.out.println("Rank: "+game.currentPlayer.rank+"Credits "+game.currentPlayer.credits);
+        if(game.currentPlayer.upgraded == false){
+            gui.insufficent();
+        }
+        if(game.currentPlayer.upgraded == true){ 
+            gui.changePlayerRankGUI(game.currentPlayer);
+        }
+        gui.runTurn(game.currentPlayer);
     }
 
     public static void back(){
