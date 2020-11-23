@@ -17,6 +17,7 @@ public class GUI extends JFrame{
     JLabel locationLabel;
     JLabel upgradeLabel;
     JLabel currencyLabel;
+    JLabel roleLabel;
 
     JLabel numberOfDays = new JLabel();
     JLabel sceneCardsLeft = new JLabel();
@@ -36,12 +37,12 @@ public class GUI extends JFrame{
     JButton upgradeOptionButton;
     JButton dollarButton;
     JButton creditButton;
-
-    public Boolean moveClicked = false;
+    JButton roleButton;
 
     public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
     public static ArrayList<JButton> locationButtons = new ArrayList<JButton>();
     public static ArrayList<JButton> upgradeButtons = new ArrayList<JButton>();
+    public static ArrayList<JButton> roleButtons = new ArrayList<JButton>();
 
     public static String[] playerColors = {"Blue", "Cyan", "Green", "Orange", "Pink", "Red", "Violet", "Yellow"};
 
@@ -70,10 +71,6 @@ public class GUI extends JFrame{
 
         setSize(boardIcon.getIconWidth()+200, boardIcon.getIconHeight());
 
-        /////////////////////////////
-        /////BUTTONS/////////////////
-        /////////////////////////////
-
         menuLabel = new JLabel("MENU");
         menuLabel.setBounds(boardIcon.getIconWidth() + 40 , 0, 100, 20);
         boardPane.add(menuLabel, 2);
@@ -92,7 +89,17 @@ public class GUI extends JFrame{
         currencyLabel.setBounds(1200 + 40 , 0, 100, 20);
         boardPane.add(currencyLabel, 2);
         currencyLabel.setVisible(false);
+
+        roleLabel = new JLabel("PICK ROLE");
+        roleLabel.setBounds(1200 + 40, 0, 100, 20);
+        boardPane.add(roleLabel, 2);
+        roleLabel.setVisible(false);
         
+        
+        /////////////////////////////
+        /////BUTTONS/////////////////
+        /////////////////////////////
+
 
         moveButton = new JButton("MOVE");
         moveButton.setBackground(Color.white);
@@ -195,6 +202,7 @@ public class GUI extends JFrame{
                 Deadwood.movePlayer();
             } else if (e.getSource() == workButton){
                 System.out.println("WORK PLAYER");
+                Deadwood.workPlayer();
             } else if (e.getSource() == upgradeButton){
                 System.out.println("UPGRADE PLAYER");
                 Deadwood.upgradePlayer();
@@ -223,6 +231,12 @@ public class GUI extends JFrame{
                 for(ActionListener act : dollarButton.getActionListeners()){
                     dollarButton.removeActionListener(act);
                 }
+
+                for (JButton button : roleButtons) {
+                    button.setVisible(false);
+                }
+                roleLabel.setVisible(false);
+                roleButtons.clear();
 
                 backButton.setVisible(false);
                 Deadwood.back();
@@ -328,6 +342,61 @@ public class GUI extends JFrame{
         }
     }
 
+    public void showRoleOptions(Set set){
+        removeAllTurnButtons();
+        roleLabel.setVisible(true);
+        int heightOffset = 0;
+
+        int index = 0;
+        int i = 0;
+        for (Role role : set.roles) {
+            roleButtons.add(new JButton(role.roleName));
+            roleButtons.get(index).setBackground(Color.white);
+            roleButtons.get(index).setBounds(1200 + 10, 30 + heightOffset, 150, 20);
+            roleButtons.get(index).addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    String choice = e.getActionCommand();
+                    System.out.println("You have picked " + choice);
+                    for (JButton button : roleButtons) {
+                        button.setVisible(false);
+                    }
+                    roleLabel.setVisible(false);
+                    roleButtons.clear();
+                    backButton.setVisible(false);
+                    //TODO: PUT PLAYER ON ROLE
+                }
+            });
+            boardPane.add(roleButtons.get(index), new Integer(2));
+            roleButtons.get(index).setVisible(true);
+            heightOffset += 30;
+            index++;
+        }
+        for (Role role : set.currentScene.roles) {
+            roleButtons.add(new JButton(role.roleName));
+            roleButtons.get(index).setBackground(Color.white);
+            roleButtons.get(index).setBounds(1200 + 10, 30 + heightOffset, 150, 20);
+            roleButtons.get(index).addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    String choice = e.getActionCommand();
+                    System.out.println("You have picked " + choice);
+                    for (JButton button : roleButtons) {
+                        button.setVisible(false);
+                    }
+                    roleLabel.setVisible(false);
+                    roleButtons.clear();
+                    backButton.setVisible(false);
+                    //TODO: PUT PLAYER ON ROLE
+                }
+            });
+            boardPane.add(roleButtons.get(index), new Integer(2));
+            roleButtons.get(index).setVisible(true);
+            heightOffset += 30;
+            index++;
+        }
+        backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+        backButton.setVisible(true);
+    }
+
     public void addUpgradeOptions(Gamemaster game){
         removeAllTurnButtons();
         upgradeLabel.setVisible(true);
@@ -366,8 +435,12 @@ public class GUI extends JFrame{
         creditButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 System.out.println("You have picked credits");
-                creditButton.removeActionListener(this);
-                dollarButton.removeActionListener(this);
+                for(ActionListener act : creditButton.getActionListeners()){
+                    creditButton.removeActionListener(act);
+                }
+                for(ActionListener act : dollarButton.getActionListeners()){
+                    dollarButton.removeActionListener(act);
+                }
                 creditButton.setVisible(false);
                 dollarButton.setVisible(false);
                 currencyLabel.setVisible(false);
@@ -381,8 +454,12 @@ public class GUI extends JFrame{
         dollarButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 System.out.println("You have picked dollars");
-                creditButton.removeActionListener(this);
-                dollarButton.removeActionListener(this);
+                for(ActionListener act : creditButton.getActionListeners()){
+                    creditButton.removeActionListener(act);
+                }
+                for(ActionListener act : dollarButton.getActionListeners()){
+                    dollarButton.removeActionListener(act);
+                }
                 dollarButton.setVisible(false);
                 creditButton.setVisible(false);
                 currencyLabel.setVisible(false);

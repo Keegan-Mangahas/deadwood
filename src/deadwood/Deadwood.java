@@ -27,6 +27,21 @@ public class Deadwood {
         
     }
 
+    public static void workPlayer(){
+        if(!"trailer".equals(game.currentPlayer.location) && !"office".equals(game.currentPlayer.location)){
+            for (Set set : game.currentPlayer.tempBoard.sets) {
+                if(set.sceneWrapped == false && set.setName.equals(game.currentPlayer.location)){
+                    gui.showRoleOptions(set);
+                    return;
+                } 
+            }
+        } else{
+            gui.showInvalid();
+            return;
+        }
+        gui.showInvalid();
+    }
+
     public static void endTurn(){
         game.board = game.currentPlayer.tempBoard; //update board
 
