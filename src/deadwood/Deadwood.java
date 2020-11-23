@@ -23,7 +23,7 @@ public class Deadwood {
         game.resetSets(); //TODO: need to make this happen when day resets
 
         game.currentPlayer.tempBoard = game.board; //TODO: need to set this up to update main board after each turn DONE??
-        
+
         game.players = gui.createGuiPlayers(game.players);
         gui.runTurn(game.currentPlayer);
     }
@@ -215,9 +215,24 @@ public class Deadwood {
         game.currentPlayer.tempBoard = game.board; //give next player updated board;
 
         game.currentPlayer.resetBeforeTurn();
+        if(game.board.sceneCardsLeft == 1){
+            game.board.maxGameDays--;
+            if(game.board.maxGameDays == 0){
+                int[] scores = game.calculateScores();
+                gui.displayScores(scores, game.players);
+                return;
+            }
+            game.resetPlayers();
+            game.resetSets();
+            gui.resetForNextDay(game);
+            game.distributeSceneCards();
+            gui.addGUISceneCards(game.board.sets); 
+            gui.dayReset();
+        }
         //gui.showNextPlayersTurn(); //TODO: uncomment this
         gui.runTurn(game.currentPlayer);
     }
+
 
     public static void movePlayer(){
         gui.addMoveOptions(game);

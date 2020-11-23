@@ -184,7 +184,7 @@ public class Gamemaster {
         }
     }
 
-    private static int calculateScore(Player player) {
+    protected static int calculateScore(Player player) {
         int score = 0;
         score += player.dollars;
         score += player.credits;
@@ -196,7 +196,7 @@ public class Gamemaster {
         displayScores(calculateScores(), printer);
     }
 
-    private static int[] calculateScores() {
+    protected static int[] calculateScores() {
         int[] scores = new int[numberOfPlayers];
         int i = 0;
         for (Player player : players) {

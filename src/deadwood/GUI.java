@@ -388,10 +388,32 @@ public class GUI extends JFrame{
             }
         }
         currentPlayer.guiLabel.setBounds(Integer.parseInt(currentSet.x) + currentPlayer.widthOffSet , Integer.parseInt(currentSet.y) + 50, Integer.parseInt(currentSet.w), Integer.parseInt(currentSet.h));
-
-        //runTurn(currentPlayer); this is called in Deadwood.movePlayerHere
     }
 
+    public void resetForNextDay(Gamemaster game){
+        for (Set set : game.board.sets) {
+                JLabel cardLabel = set.cardLabel;
+                if(!(cardLabel == null)){
+                    boardPane.remove(cardLabel);
+                }
+                JLabel cardLabelBack = set.cardBackLabel;
+                if(!(cardLabelBack == null)){
+                    boardPane.remove(cardLabelBack);
+                }
+                
+            for (Take take : set.takesData) {
+                JLabel takeLabel = take.takeLabel;
+                if(!(takeLabel == null)){
+                    boardPane.remove(takeLabel);
+                }
+            }
+            boardPane.revalidate();
+            boardPane.repaint();
+        }
+        for (Player player : game.players) {
+            updatePlayerLocation(player, game.board.sets);
+        }
+    }
     
     public void revealSceneCard(Player currentPlayer, ArrayList<Set> sets){
         Set currentSet = new Set();
@@ -573,6 +595,10 @@ public class GUI extends JFrame{
         JOptionPane.showMessageDialog(null, "Upgrade failed, not enough money");
     }
 
+    public void dayReset(){
+        JOptionPane.showMessageDialog(null, "It is a new day!");
+    }
+
     public void addMoveOptions(Gamemaster game){
         removeAllTurnButtons();
         locationLabel.setVisible(true);
@@ -665,10 +691,29 @@ public class GUI extends JFrame{
         return players;
     }
 
+    public static void displayScores(int[] scores, ArrayList<Player> players){
+        String scoreText = "<html><body width='%1s'><h1>Scores</h1>";
+        int place = 1;
+        for(int i = scores.length - 1; i >= 0; i--){
+            for (Player player : players) {
+                if(player.score == scores[i]){
+                    scoreText = scoreText + "<br>"+place+": Player "+player.playerNumber+" with "+player.score+" points!";
+                    place++;
+                }
+            }
+        }
+        JOptionPane.showMessageDialog(null, scoreText);
+        System.exit(-1);
+        
+    }
+
     public static int askNumPlayers(GUI gui){
         Boolean gotInt = false;
         int playerNum = 0;
         String input = JOptionPane.showInputDialog(gui, "How many players? (2-8)");
+        if(input == null){
+            System.exit(-1);
+        }
         while(gotInt == false){
             try {
                 playerNum = Integer.parseInt(input);
@@ -679,6 +724,9 @@ public class GUI extends JFrame{
                 gotInt = true;
             } else {
                 input = JOptionPane.showInputDialog(gui, "Invalid entry, please enter a number 2-8");
+                if(input == null){
+                    System.exit(-1);
+                }
                 continue;
             }
         }
