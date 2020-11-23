@@ -31,6 +31,8 @@ public class GUI extends JFrame{
     JButton moveButton;
     JButton workButton;
     JButton upgradeButton;
+    JButton actButton;
+    JButton rehearseButton;
     JButton skipButton;
     JButton backButton;
     JButton locationButton;
@@ -119,6 +121,18 @@ public class GUI extends JFrame{
         upgradeButton.addMouseListener(new boardMouseListener());
         upgradeButton.setVisible(false);
 
+        actButton = new JButton("ACT");
+        actButton.setBackground(Color.white);
+        actButton.setBounds(1200 + 10, 30, 100, 20);
+        actButton.addMouseListener(new boardMouseListener());
+        actButton.setVisible(false);
+
+        rehearseButton = new JButton("REHEARSE");
+        rehearseButton.setBackground(Color.white);
+        rehearseButton.setBounds(1200 + 10, 60, 100, 20);
+        rehearseButton.addMouseListener(new boardMouseListener());
+        rehearseButton.setVisible(false);
+
         skipButton = new JButton("SKIP");
         skipButton.setBackground(Color.white);
         skipButton.setBounds(1200 + 10, 120, 100, 20);
@@ -143,6 +157,8 @@ public class GUI extends JFrame{
         boardPane.add(backButton, new Integer(2));
         boardPane.add(moveButton, new Integer(2));
         boardPane.add(workButton, new Integer(2));
+        boardPane.add(actButton, new Integer(2));
+        boardPane.add(rehearseButton, new Integer(2));
         boardPane.add(skipButton, new Integer(2));
         boardPane.add(upgradeButton, new Integer(2));
 
@@ -160,6 +176,8 @@ public class GUI extends JFrame{
         this.moveButton.setVisible(false);
         this.workButton.setVisible(false);
         this.upgradeButton.setVisible(false);
+        this.actButton.setVisible(false);
+        this.rehearseButton.setVisible(false);
         this.skipButton.setVisible(false);
     }
     public void removeAllExtraLabels(){
@@ -171,7 +189,10 @@ public class GUI extends JFrame{
     public void addSelectedTurnButtons(int choice){
         this.menuLabel.setVisible(true);
         if(choice == 0){
-            //TODO: make act and rehearse buttons visible only
+            removeAllTurnButtons();
+            this.menuLabel.setVisible(true);
+            this.actButton.setVisible(true);
+            this.rehearseButton.setVisible(true);
         } else if(choice == 1){
             this.moveButton.setVisible(true);
             this.workButton.setVisible(true);
@@ -206,6 +227,12 @@ public class GUI extends JFrame{
             } else if (e.getSource() == upgradeButton){
                 System.out.println("UPGRADE PLAYER");
                 Deadwood.upgradePlayer();
+            } else if(e.getSource() == actButton){
+                System.out.println("ACTING");
+                Deadwood.act();
+            } else if(e.getSource() == rehearseButton){
+                System.out.println("REHEARSING");
+                Deadwood.rehearse();
             } else if (e.getSource() == locationButton){
                 System.out.println("MOVE TO LOCATION");
             } else if (e.getSource() == backButton){
@@ -260,6 +287,7 @@ public class GUI extends JFrame{
         if(currentPlayer.continueTurn == true){
             if(currentPlayer.onRole == true){
                 System.out.println("SHOW ACT REHEARSE BUTTONS");
+                addSelectedTurnButtons(0);
             } else if(!currentPlayer.moved && !currentPlayer.upgraded){
                 System.out.println("MOVE UPGRADE WORK SKIP BUTTONS");
                 addSelectedTurnButtons(1);
@@ -310,8 +338,20 @@ public class GUI extends JFrame{
         boardPane.add(playerLocation, new Integer(2));
     }
 
+    public void showNextPlayersTurn(){
+        JOptionPane.showMessageDialog(null, "Is is the next players turn");
+    }
+
     public void showInvalid(){
         JOptionPane.showMessageDialog(null, "You cannot do that");
+    }
+
+    public void showInvalidRehearse(){
+        JOptionPane.showMessageDialog(null, "You have too many rehearsal tokens, you must act");
+    }
+
+    public void showRehearseSuccess(){
+        JOptionPane.showMessageDialog(null, "You rehearsed your roll!");
     }
 
     public void putPlayerOnRole(Player currentPlayer, ArrayList<Set> sets){

@@ -24,7 +24,26 @@ public class Deadwood {
         
         game.players = gui.createGuiPlayers(game.players);
         gui.runTurn(game.currentPlayer);
+    }
+
+    public static void act(){
         
+    }
+
+    public static void rehearse(){
+        Set findSet = new Set();
+        for (Set getSet : game.board.sets) {
+            if(game.currentPlayer.location.equals(getSet.setName)){
+                findSet = getSet;
+            }
+        }
+        if(game.currentPlayer.rehearsalTokens + 1 == findSet.currentScene.sceneBudget ){
+            gui.showInvalidRehearse();
+        } else {
+            game.currentPlayer.rehearsalTokens++;
+            gui.showRehearseSuccess();
+        }
+        endTurn();
     }
 
     public static void workPlayer(){
@@ -108,6 +127,7 @@ public class Deadwood {
         game.currentPlayer.tempBoard = game.board; //give next player updated board;
 
         game.currentPlayer.resetBeforeTurn();
+        //gui.showNextPlayersTurn(); //TODO: uncomment this
         gui.runTurn(game.currentPlayer);
     }
 

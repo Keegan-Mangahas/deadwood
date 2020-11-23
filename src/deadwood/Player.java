@@ -370,12 +370,6 @@ public class Player {
                 printer.gotMoney(0, 1);
             }
         }
-        
-        /*
-        this will need to check if scene is wrapped after acting
-        since Board class seems to contain board/scene info,
-        wrapScene method is in there
-        */
     }
 
     private Boolean move(Scanner playerInput, DeadwoodPrinter printer){
