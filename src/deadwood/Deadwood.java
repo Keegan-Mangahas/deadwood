@@ -14,13 +14,13 @@ public class Deadwood {
         game.numberOfPlayers = gui.askNumPlayers(gui);
         game.createPlayers();
 
-        game.distributeSceneCards(); //need to make this happen when day resets
-        gui.addGUISceneCards(game.board.sets); //need to make this happen when day resets
+        game.distributeSceneCards(); //TODO: need to make this happen when day resets
+        gui.addGUISceneCards(game.board.sets); //TODO: need to make this happen when day resets
 
-        game.resetPlayers(); //need to make this happen when day resets
-        game.resetSets(); //need to make this happen when day resets
+        game.resetPlayers(); //TODO: need to make this happen when day resets
+        game.resetSets(); //TODO: need to make this happen when day resets
 
-        game.currentPlayer.tempBoard = game.board; //need to set this up to update main board after each turn
+        game.currentPlayer.tempBoard = game.board; //TODO: need to set this up to update main board after each turn DONE??
         
         game.players = gui.createGuiPlayers(game.players);
         gui.runTurn(game.currentPlayer);
@@ -44,6 +44,23 @@ public class Deadwood {
 
     public static void movePlayer(){
         gui.addMoveOptions(game);
+    }
+    
+    public static void upgradePlayer(){
+        /*
+        if(game.currentPlayer.rank == 6){
+            gui.showInvalid();
+        } else if("office".equals(game.currentPlayer.location)){
+            gui.addUpgradeOptions(game);
+        } else{
+            gui.showInvalid();
+        }
+        */ //TODO: UNCOMMENT THIS
+        gui.addUpgradeOptions(game);
+    }
+
+    public static void back(){
+        gui.runTurn(game.currentPlayer);
     }
 
     public static void movePlayerHere(String location){

@@ -2,12 +2,8 @@ package deadwood;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
-import javax.swing.JOptionPane;
-
-
 import java.util.*;
 
 public class GUI extends JFrame{
@@ -17,6 +13,9 @@ public class GUI extends JFrame{
     JLabel boardLabel;
     JLabel menuLabel;
     JLabel cardLabel;
+    JLabel playerLabel;
+    JLabel locationLabel;
+    JLabel upgradeLabel;
 
     JLabel numberOfDays = new JLabel();
     JLabel sceneCardsLeft = new JLabel();
@@ -33,13 +32,15 @@ public class GUI extends JFrame{
     JButton skipButton;
     JButton backButton;
     JButton locationButton;
+    JButton upgradeOptionButton;
 
-    JLabel playerLabel;
+    
 
     public Boolean moveClicked = false;
 
     public static ArrayList<JLabel> guiPlayers = new ArrayList<JLabel>();
     public static ArrayList<JButton> locationButtons = new ArrayList<JButton>();
+    public static ArrayList<JButton> upgradeButtons = new ArrayList<JButton>();
 
     public static String[] playerColors = {"Blue", "Cyan", "Green", "Orange", "Pink", "Red", "Violet", "Yellow"};
 
@@ -75,6 +76,16 @@ public class GUI extends JFrame{
         menuLabel = new JLabel("MENU");
         menuLabel.setBounds(boardIcon.getIconWidth() + 40 , 0, 100, 20);
         boardPane.add(menuLabel, 2);
+
+        locationLabel = new JLabel("LOCATIONS");
+        locationLabel.setBounds(1200 + 40 , 0, 100, 20);
+        boardPane.add(locationLabel, 2);
+        locationLabel.setVisible(false);
+
+        upgradeLabel = new JLabel("UPGRADES");
+        upgradeLabel.setBounds(1200 + 40 , 0, 100, 20);
+        boardPane.add(upgradeLabel, 2);
+        upgradeLabel.setVisible(false);
         
 
         moveButton = new JButton("MOVE");
@@ -123,13 +134,19 @@ public class GUI extends JFrame{
     }
 
     public void removeAllTurnButtons(){
+        this.menuLabel.setVisible(false);
         this.moveButton.setVisible(false);
         this.workButton.setVisible(false);
         this.upgradeButton.setVisible(false);
         this.skipButton.setVisible(false);
     }
+    public void removeAllExtraLabels(){
+        this.upgradeLabel.setVisible(false);
+        this.locationLabel.setVisible(false);
+    }
 
     public void addSelectedTurnButtons(int choice){
+        this.menuLabel.setVisible(true);
         if(choice == 0){
             //TODO: make act and rehearse buttons visible only
         } else if(choice == 1){
@@ -164,9 +181,28 @@ public class GUI extends JFrame{
                 System.out.println("WORK PLAYER");
             } else if (e.getSource() == upgradeButton){
                 System.out.println("UPGRADE PLAYER");
+                Deadwood.upgradePlayer();
             } else if (e.getSource() == locationButton){
                 System.out.println("MOVE TO LOCATION");
-            }  else if (e.getSource() == skipButton){
+            } else if (e.getSource() == backButton){
+                System.out.println("GOING BACK");
+                removeAllExtraLabels();
+                for (JButton button : upgradeButtons) {
+                    button.setVisible(false);
+                }
+                upgradeLabel.setVisible(false);
+                upgradeButtons.clear();
+
+                for (JButton button : locationButtons) {
+                    button.setVisible(false);
+                }
+                locationLabel.setVisible(false);
+                locationButtons.clear();
+                
+                backButton.setVisible(false);
+
+                Deadwood.back();
+            } else if (e.getSource() == skipButton){
                 System.out.println("SKIPPING TURN");
                 Deadwood.endTurn();
             }  
@@ -236,6 +272,10 @@ public class GUI extends JFrame{
         boardPane.add(playerLocation, new Integer(2));
     }
 
+    public void showInvalid(){
+        JOptionPane.showMessageDialog(null, "You cannot do that");
+    }
+
     public void updatePlayerLocation(Player currentPlayer, ArrayList<Set> sets){
         Set currentSet = new Set();
         for (Set set : sets) {
@@ -264,15 +304,45 @@ public class GUI extends JFrame{
         }
     }
 
+    public void addUpgradeOptions(Gamemaster game){
+        removeAllTurnButtons();
+        upgradeLabel.setVisible(true);
+        int heightOffset = 0;
+
+        int index = 0;
+        for(int i = game.currentPlayer.rank + 1; i <= 6; i++){
+            upgradeButtons.add(new JButton(Integer.toString(i)));
+            upgradeButtons.get(index).setBackground(Color.white);
+            upgradeButtons.get(index).setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+            upgradeButtons.get(index).addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    int choice = Integer.parseInt(e.getActionCommand());
+                    System.out.println("You have picked " + choice);
+                    for (JButton button : upgradeButtons) {
+                        button.setVisible(false);
+                    }
+                    upgradeLabel.setVisible(false);
+                    upgradeButtons.clear();
+                    backButton.setVisible(false);
+                }
+            });
+            boardPane.add(upgradeButtons.get(index), new Integer(2));
+            upgradeButtons.get(index).setVisible(true);
+            heightOffset += 30;
+            index++;
+        }
+        backButton.setBounds(1200 + 10, 30 + heightOffset, 100, 20);
+        backButton.setVisible(true);
+    }
+
     public void addMoveOptions(Gamemaster game){
         removeAllTurnButtons();
+        locationLabel.setVisible(true);
         int heightOffset = 0;
-        Set playerLocationSet = new Set();
         ArrayList<String> neighbors = new ArrayList<String>();
         for (Set getSet : Gamemaster.board.sets) {
             if(game.currentPlayer.location.equals(getSet.setName)){
                 neighbors = getSet.neighborNames;
-                playerLocationSet = getSet;
             }
         }
         int index = 0;
@@ -288,12 +358,12 @@ public class GUI extends JFrame{
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
-                    
+                    locationLabel.setVisible(false);
                     locationButtons.clear();
                     backButton.setVisible(false);
                 }
             });
-            boardPane.add(locationButtons.get(index), 2);
+            boardPane.add(locationButtons.get(index), new Integer(2));
             locationButtons.get(index).setVisible(true);
 
             heightOffset += 30;
