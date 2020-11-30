@@ -401,11 +401,9 @@ public class GUI extends JFrame{
                     boardPane.remove(cardLabelBack);
                 }
                 
-            for (Take take : set.takesData) {
-                JLabel takeLabel = take.takeLabel;
-                if(!(takeLabel == null)){
-                    boardPane.remove(takeLabel);
-                }
+            
+            for (JLabel takeTest : takeLabels) {
+                boardPane.remove(takeTest);
             }
             boardPane.revalidate();
             boardPane.repaint();
