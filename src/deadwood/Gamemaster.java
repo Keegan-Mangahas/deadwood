@@ -19,39 +19,6 @@ public class Gamemaster {
         main method that starts the game
     */
     
-    public static void main(String[] args){
-        createBoard();
-        createCards();
-        askNumPlayers();
-        createPlayers();
-        //actual game!!
-        input.nextLine(); //clear scanner
-        //while game is running
-        while(maxGameDays != 0){
-            //first time through, this just sets up board by giving sets scene cards
-            //every time after, it is giving sets new scene cards
-            //starts at 2 because trailer set is [0] and office set is [1]
-            distributeSceneCards();
-
-            //after scene cards are given out return players back to trailer
-            //reset players to not working, etc
-            resetPlayers();
-
-            //after resetting players, reset each set
-            resetSets();
-
-            //while board has more than one scene card
-            while(board.sceneCardsLeft != 1){
-                runTurn();
-                nextPlayer();
-            }
-            System.out.println("RESTTING BOARD AND PLAYERS");
-            maxGameDays--;
-        }
-        System.out.println("ENDING GAME");
-        endGame(printer);
-
-    }
     protected static void createBoard(){
         //read set data and put it into the board
         Document boardDoc = null;
@@ -250,7 +217,6 @@ public class Gamemaster {
         for(int i = 0; i < numberOfPlayers; i++){
             Player current = players.get(i);
             String print = current.printPlayerData();
-            System.out.println(print);
         }
 
         //player 1 goes first cause that's easiest

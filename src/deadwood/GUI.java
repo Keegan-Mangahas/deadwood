@@ -225,21 +225,15 @@ public class GUI extends JFrame{
             if (e.getSource() == moveButton){
                 Deadwood.movePlayer();
             } else if (e.getSource() == workButton){
-                System.out.println("WORK PLAYER");
                 Deadwood.workPlayer();
             } else if (e.getSource() == upgradeButton){
-                System.out.println("UPGRADE PLAYER");
                 Deadwood.upgradePlayer();
             } else if(e.getSource() == actButton){
-                System.out.println("ACTING");
                 Deadwood.act();
             } else if(e.getSource() == rehearseButton){
-                System.out.println("REHEARSING");
                 Deadwood.rehearse();
             } else if (e.getSource() == locationButton){
-                System.out.println("MOVE TO LOCATION");
             } else if (e.getSource() == backButton){
-                System.out.println("GOING BACK");
                 removeAllExtraLabels();
                 for (JButton button : upgradeButtons) {
                     button.setVisible(false);
@@ -271,7 +265,6 @@ public class GUI extends JFrame{
                 backButton.setVisible(false);
                 Deadwood.back();
             } else if (e.getSource() == skipButton){
-                System.out.println("SKIPPING TURN");
                 Deadwood.endTurn();
             }  
         }
@@ -289,19 +282,14 @@ public class GUI extends JFrame{
         displayInfo(currentPlayer);
         if(currentPlayer.continueTurn == true){
             if(currentPlayer.onRole == true){
-                System.out.println("SHOW ACT REHEARSE BUTTONS");
                 addSelectedTurnButtons(0);
             } else if(!currentPlayer.moved && !currentPlayer.upgraded){
-                System.out.println("MOVE UPGRADE WORK SKIP BUTTONS");
                 addSelectedTurnButtons(1);
             } else if(currentPlayer.moved && !currentPlayer.upgraded){
-                System.out.println("UPGRADE WORK SKIP BUTTONS");
                 addSelectedTurnButtons(2);
             } else if(!currentPlayer.moved && currentPlayer.upgraded){
-                System.out.println("MOVE WORK SKIP BUTTONS");
                 addSelectedTurnButtons(3);
             } else if(currentPlayer.moved && currentPlayer.upgraded){
-                System.out.println("WORK SKIP BUTTONS");
                 addSelectedTurnButtons(4);
             }
         }
@@ -465,7 +453,6 @@ public class GUI extends JFrame{
             roleButtons.get(index).addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     String choice = e.getActionCommand();
-                    System.out.println("You have picked " + choice);
                     for (JButton button : roleButtons) {
                         button.setVisible(false);
                     }
@@ -487,7 +474,6 @@ public class GUI extends JFrame{
             roleButtons.get(index).addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     String choice = e.getActionCommand();
-                    System.out.println("You have picked " + choice);
                     for (JButton button : roleButtons) {
                         button.setVisible(false);
                     }
@@ -519,7 +505,6 @@ public class GUI extends JFrame{
             upgradeButtons.get(index).addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     int choice = Integer.parseInt(e.getActionCommand());
-                    System.out.println("You have picked " + choice);
                     for (JButton button : upgradeButtons) {
                         button.setVisible(false);
                     }
@@ -543,7 +528,6 @@ public class GUI extends JFrame{
         creditButton.setVisible(true);
         creditButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                System.out.println("You have picked credits");
                 for(ActionListener act : creditButton.getActionListeners()){
                     creditButton.removeActionListener(act);
                 }
@@ -562,7 +546,6 @@ public class GUI extends JFrame{
         dollarButton.setVisible(true);
         dollarButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                System.out.println("You have picked dollars");
                 for(ActionListener act : creditButton.getActionListeners()){
                     creditButton.removeActionListener(act);
                 }
@@ -615,7 +598,6 @@ public class GUI extends JFrame{
             locationButtons.get(index).addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     String choice = e.getActionCommand();
-                    System.out.println("You have picked " + choice);
                     Deadwood.movePlayerHere(choice);
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
