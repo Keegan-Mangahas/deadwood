@@ -16,13 +16,13 @@ public class Deadwood {
         game.numberOfPlayers = gui.askNumPlayers(gui);
         game.createPlayers();
 
-        game.distributeSceneCards(); //TODO: need to make this happen when day resets
-        gui.addGUISceneCards(game.board.sets); //TODO: need to make this happen when day resets
+        game.distributeSceneCards();
+        gui.addGUISceneCards(game.board.sets);
 
-        game.resetPlayers(); //TODO: need to make this happen when day resets
-        game.resetSets(); //TODO: need to make this happen when day resets
+        game.resetPlayers(); 
+        game.resetSets(); 
 
-        game.currentPlayer.tempBoard = game.board; //TODO: need to set this up to update main board after each turn DONE??
+        game.currentPlayer.tempBoard = game.board; 
 
         game.players = gui.createGuiPlayers(game.players);
         gui.runTurn(game.currentPlayer);
@@ -58,7 +58,7 @@ public class Deadwood {
                 game.board.sceneCardsLeft--;
                 findSet.sceneWrapped = true;
                 game.board.sets.set(setIndex, findSet);
-                game.board.wrapThisSet = findSet; //TODO: WRAP SET
+                game.board.wrapThisSet = findSet; 
                 wrapSet();
             }
         } else {
@@ -229,7 +229,7 @@ public class Deadwood {
             gui.addGUISceneCards(game.board.sets); 
             gui.dayReset();
         }
-        //gui.showNextPlayersTurn(); //TODO: uncomment this
+        gui.showNextPlayersTurn();
         gui.runTurn(game.currentPlayer);
     }
 

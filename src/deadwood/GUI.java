@@ -621,7 +621,6 @@ public class GUI extends JFrame{
     public void addGUISceneCards(ArrayList<Set> sets){
         for (Set set : sets) {
             if(!"trailer".equals(set.setName) && !"office".equals(set.setName)){
-                Scene setScene = set.currentScene; //TODO: Not needed?
                 placeSceneCard(set);
                 placeSceneCardBack(set);
             }
