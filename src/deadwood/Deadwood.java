@@ -127,11 +127,13 @@ public class Deadwood {
         }
         if(game.currentPlayer.rehearsalTokens + 1 == findSet.currentScene.sceneBudget ){
             gui.showInvalidRehearse();
+            gui.runTurn(game.currentPlayer);
         } else {
             game.currentPlayer.rehearsalTokens++;
             gui.showRehearseSuccess();
+            endTurn();
         }
-        endTurn();
+        
     }
 
     public static void workPlayer(){
@@ -215,9 +217,9 @@ public class Deadwood {
         game.currentPlayer.tempBoard = game.board; //give next player updated board;
 
         game.currentPlayer.resetBeforeTurn();
-        if(game.board.sceneCardsLeft == 1){
+        if(game.board.sceneCardsLeft == 9){ //TODO: MAKE DEFAULT
             game.board.maxGameDays--;
-            if(game.board.maxGameDays == 0){
+            if(game.board.maxGameDays == 2){
                 int[] scores = game.calculateScores();
                 gui.displayScores(scores, game.players);
                 return;
