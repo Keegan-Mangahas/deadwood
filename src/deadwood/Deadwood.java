@@ -217,9 +217,9 @@ public class Deadwood {
         game.currentPlayer.tempBoard = game.board; //give next player updated board;
 
         game.currentPlayer.resetBeforeTurn();
-        if(game.board.sceneCardsLeft == 9){ //TODO: MAKE DEFAULT
+        if(game.board.sceneCardsLeft == 1){ //TODO: MAKE DEFAULT
             game.board.maxGameDays--;
-            if(game.board.maxGameDays == 2){
+            if(game.board.maxGameDays == 0){
                 int[] scores = game.calculateScores();
                 gui.displayScores(scores, game.players);
                 return;
